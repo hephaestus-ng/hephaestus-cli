@@ -1,0 +1,65 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: ce2ee8ebc6981bf2da2f1ba269c9e51a0627b2d17d20ceaaed6e83a581be504b
+
+name:           hephaestus-cli
+version:        0.1.0.0
+description:    Please see the README on Github at <https://github.com/hephaestus-ng/hephaestus-cli#readme>
+homepage:       https://github.com/hephaestus-ng/hephaestus-cli#readme
+bug-reports:    https://github.com/hephaestus-ng/hephaestus-cli/issues
+author:         Thiago Figueiredo
+maintainer:     thiagofigueiredo777@gmail.com
+copyright:      CC
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/hephaestus-ng/hephaestus-cli
+
+library
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_hephaestus_cli
+  default-language: Haskell2010
+
+executable hephaestus-cli-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , hephaestus-cli
+  other-modules:
+      Paths_hephaestus_cli
+  default-language: Haskell2010
+
+test-suite hephaestus-cli-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , hephaestus-cli
+    , hephaestus-fm
+    , hephaestus-spl
+    , hephaestus-sc
+  other-modules:
+      Paths_hephaestus_cli
+  default-language: Haskell2010
