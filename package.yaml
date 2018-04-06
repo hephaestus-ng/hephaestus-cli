@@ -21,6 +21,9 @@ description:         Please see the README on Github at <https://github.com/heph
 
 dependencies:
 - base >= 4.7 && < 5
+- hephaestus-fm
+- hephaestus-spl
+- hephaestus-sc
 
 library:
   source-dirs: src
@@ -35,6 +38,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - hephaestus-cli
+    - hephaestus-fm
+    - hephaestus-spl
+    - hephaestus-sc
 
 tests:
   hephaestus-cli-test:
@@ -46,3 +52,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hephaestus-cli
+    - hephaestus-fm
+    - hephaestus-spl
+    - hephaestus-sc
