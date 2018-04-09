@@ -24,6 +24,8 @@ dependencies:
 - hephaestus-fm
 - hephaestus-spl
 - hephaestus-sc
+- lens
+- containers
 
 library:
   source-dirs: src
@@ -41,6 +43,8 @@ executables:
     - hephaestus-fm
     - hephaestus-spl
     - hephaestus-sc
+    - lens
+    - containers
 
 tests:
   hephaestus-cli-test:
@@ -55,3 +59,5 @@ tests:
     - hephaestus-fm
     - hephaestus-spl
     - hephaestus-sc
+    - lens
+    - containers
