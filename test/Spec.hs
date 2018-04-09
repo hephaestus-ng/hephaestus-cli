@@ -1,14 +1,16 @@
+import Data.Tree
 
 import Data.FM.FeatureModel
 import Data.FM.Feature
 import Data.FM.ProductConfiguration
 import Data.FM.Expression
 import Data.FM.Tree
+
 import Data.SourceCode
 
-import Data.Tree
-
 import Data.SPL
+
+
 
 main :: IO ()
 main = putStrLn "Test suite not yet implemented"

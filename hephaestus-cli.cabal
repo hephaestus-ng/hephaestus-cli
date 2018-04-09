@@ -2,7 +2,8 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ce2ee8ebc6981bf2da2f1ba269c9e51a0627b2d17d20ceaaed6e83a581be504b
+
+-- hash: 84e581f837a2759ad143aec36ec8bf895d0e9fb7f2aa055bac31b3f802fafaa4
 
 name:           hephaestus-cli
 version:        0.1.0.0
@@ -30,8 +31,13 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , containers
+    , hephaestus-fm
+    , hephaestus-sc
+    , hephaestus-spl
+    , lens
   exposed-modules:
-      Lib
+      Cli
   other-modules:
       Paths_hephaestus_cli
   default-language: Haskell2010
@@ -43,7 +49,12 @@ executable hephaestus-cli-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , hephaestus-cli
+    , hephaestus-fm
+    , hephaestus-sc
+    , hephaestus-spl
+    , lens
   other-modules:
       Paths_hephaestus_cli
   default-language: Haskell2010
@@ -56,10 +67,12 @@ test-suite hephaestus-cli-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , containers
     , hephaestus-cli
     , hephaestus-fm
-    , hephaestus-spl
     , hephaestus-sc
+    , hephaestus-spl
+    , lens
   other-modules:
       Paths_hephaestus_cli
   default-language: Haskell2010
