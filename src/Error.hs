@@ -6,23 +6,31 @@ import Control.Lens
 
 data HephError = HephSPLError { hsplError :: SPLError }
                | HephAssetError { hassetError :: AssetError }
-               | Unknown3
+  deriving (Show)
 
 instance AsAssetError HephError where
   assetError =
-    prism HephAssetError (\x ->
+    prism' HephAssetError (\x ->
       case x of
-        HephAssetError err -> Right err
-        _                  -> Left Unknown3)
+        HephAssetError err -> Just err
+        _                  -> Nothing)
+
+
+instance AsSPLError HephError where
+  splError =
+    prism' HephSPLError (\x ->
+      case x of
+        HephSPLError err -> Just err
+        _                -> Nothing)
+
 
 
 -- AssetError with Prism implementation
-type PathErr   = String
-type FormatErr = String
 
-data ParserErr = PathErr | FormatErr
+type ParserErr = String
 
-data AssetError = ParserTErr ParserErr | ParserAErr ParserErr | Unknown
+data AssetError = ParserTErr ParserErr | ParserAErr ParserErr
+  deriving (Show)
 
 class AsAssetError t where
   assetError :: Prism' t AssetError
@@ -32,35 +40,36 @@ class AsAssetError t where
 instance AsAssetError AssetError where
   assetError = id
   parserTErr =
-    prism ParserTErr (\x ->
+    prism' ParserTErr (\x ->
       case x of
-        ParserTErr err -> Right err
-        _              -> Left Unknown)
+        ParserTErr err -> Just err
+        _              -> Nothing)
   parserAErr =
-    prism ParserAErr (\x ->
+    prism' ParserAErr (\x ->
       case x of
-        ParserAErr err -> Right err
-        _              -> Left Unknown)
+        ParserAErr err -> Just err
+        _              -> Nothing)
 
 
 --SPLError with prism implementation
 
-data SPLError = FeatureModelErr String | CfgKnowledgeErr String | Unknown2
+data SPLError = FeatureModelErr String | CfgKnowledgeErr String
+  deriving (Show)
 
 class AsSPLError t where
   splError        :: Prism' t SPLError
-  featureModelErr :: Prism' t SPLError
-  cfgKnowledgeErr :: Prism' t SPLError
+  featureModelErr :: Prism' t String
+  cfgKnowledgeErr :: Prism' t String
 
 instance AsSPLError SPLError where
   splError        = id
   featureModelErr =
-    prism FeatureModelErr $ (\x ->
+    prism' FeatureModelErr $ (\x ->
       case x of
-        FeatureModelErr err -> Right err
-        _                   -> Left Unknown2)
+        FeatureModelErr err -> Just err
+        _                   -> Nothing)
   cfgKnowledgeErr =
-    prism CfgKnowledgeErr $ (\x ->
+    prism' CfgKnowledgeErr $ (\x ->
       case x of
-        CfgKnowledgeErr err -> Right err
-        _                   -> Left Unknown2)
+        CfgKnowledgeErr err -> Just err
+        _                   -> Nothing)

@@ -12,9 +12,12 @@ import Control.Monad.Except
 import Control.Lens as L
 
 
-hcfg = HephConfig "asset" "ck"
+hcfg     = HephConfig "asset-path" "ck-path"
 
--- herr = HephError 
+splerr   = FeatureModelErr "invalid feature model"
+asseterr = ParserTErr "invalid path"
+
+herr = HephSPLError splerr
 
 newtype Hephaestus a =
   Hephaestus {
