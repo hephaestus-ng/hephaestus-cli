@@ -6,6 +6,8 @@ module Cli where
 import Error
 import Config
 import Parser
+import Shell
+
 
 import Control.Monad.Reader
 import Control.Monad.Except
@@ -17,7 +19,8 @@ hcfg     = HephConfig "asset-path" "ck-path"
 splerr   = FeatureModelErr "invalid feature model"
 asseterr = ParserTErr "invalid path"
 
-herr = HephSPLError splerr
+herr     = HephSPLError splerr
+
 
 newtype Hephaestus a =
   Hephaestus {
@@ -30,5 +33,5 @@ newtype Hephaestus a =
   )
 
 
-
--- load :: LoadType -> Hephaestus
+readCfg :: Hephaestus String
+readCfg = undefined
