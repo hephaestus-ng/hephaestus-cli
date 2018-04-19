@@ -6,45 +6,71 @@ import Control.Applicative
 import Control.Monad.Reader
 import Control.Monad.Except
 
-import Config
--- FREE MONAD EXAMPLE : CHAINING COMPUTATIONS FROM MONADIC SHELL
--- data Command = Load
---              | Build
---
--- data Shell a =
---     GetLine (String -> Shell a)
---   | PrintLine String (Shell a)
---   | Done a
+-- import Config
 
--- cmd = GetLine (\x  -> PrintLine x (Done "done"))
 
--- interpret :: Shell a -> IO a
--- interpret (Done a) = pure a
--- interpret (GetLine next) = do
---   str <- getLine
---   interpret (next str)
--- interpret (PrintLine str next) = do
---   putStrLn str
---   interpret next
 
+data Command a = Load a
+               | Build a
+
+data Shell a =
+    GetCmd(String -> Shell a)
+  | PrintCmd String (Shell a)
+  | Done a
+
+cmd = GetCmd (\x  -> PrintCmd x (PrintCmd x (Done "end computation chain")))
+
+interpret :: Shell a -> IO a
+interpret (Done a) = pure a
+
+interpret (GetCmd next) = do
+  str <- getLine
+  interpret (next str)
+
+interpret (PrintCmd str next) = do
+  putStrLn str
+  interpret next
+
+
+type Cmd = String
+-- WITH TYPECLASS DEFINITION
 
 class Monad m => MonadShell m where
-  getCommand :: m String
-  runCommand :: String -> m ()
+  getCommand :: m Cmd
+  runCommand :: Cmd -> m ()
+  done       :: m ()
+
+class Monad m => MonadLog m where
+  logg :: String -> m ()
 
 
 
-instance (HasHephConfig r) => MonadShell (ReaderT r IO) where
-  getCommand     = liftIO $ getLine
-  runCommand   s = liftIO $ putStrLn s
+-- instance (HasHephConfig r) => MonadShell (ReaderT r IO) where
+--   getCommand     = liftIO $ getLine
+--   runCommand   s = liftIO $ putStrLn s
+
+instance MonadShell IO where
+  getCommand   = getLine
+  runCommand s = putStrLn s
+  done         = return ()
+
+instance MonadLog IO where
+  logg s = putStrLn s
 
 
-
-myProgram :: MonadShell m => m ()
-myProgram = do
+program :: (MonadShell m, MonadLog m) => m ()
+program = do
   a <- getCommand
+  logg ("got a")
   b <- getCommand
+  logg ("got b")
   runCommand (a ++ b)
+  c <- getCommand
+  runCommand c
+  done
+  d <- getCommand
+  logg ("got d")
+  runCommand d
 
 
 -- main :: IO ()

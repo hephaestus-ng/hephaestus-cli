@@ -1,4 +1,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleContexts #-}
+
 -- extension used for deriving instances to hephaestus type
 
 module Cli where
@@ -24,14 +26,25 @@ herr     = HephSPLError splerr
 
 newtype Hephaestus a =
   Hephaestus {
-    appHeph :: ReaderT HephConfig (ExceptT HephError IO) a
+    appHeph :: ReaderT HephConfig IO a
+    -- appHeph :: ReaderT HephConfig (ExceptT HephError IO) a
   } deriving (
     Functor, Applicative, Monad,
     MonadReader HephConfig,
-    MonadError HephError,
     MonadIO
   )
 
+data Env = Env
+  { envLog     :: String -> IO ()
+  }
 
-readCfg :: Hephaestus String
-readCfg = undefined
+env = Env { envLog = \x -> putStrLn x }
+
+modifyCfg :: (MonadReader Env m, MonadIO m) => String -> m ()
+modifyCfg f = do
+  cfg <- ask
+  liftIO $ envLog cfg f
+
+main :: IO ()
+main = do
+  runReader (modifyCfg "la") env
