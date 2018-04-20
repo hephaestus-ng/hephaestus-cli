@@ -24,6 +24,41 @@ asseterr = ParserTErr "invalid path"
 herr     = HephSPLError splerr
 
 
+
+
+class Monad m => MonadShell m where
+  getCommand :: m String
+  runCommand :: String -> m ()
+
+
+instance (HasHephConfig env, MonadIO m) => MonadShell (ReaderT env m) where
+  getCommand = do
+    getLine
+  runCommand c = do
+    liftIO $ putStrLn c
+
+-- readConfig :: (MonadReader env m, HasHephConfig env, MonadIO m) => m ()
+-- readConfig = do
+--   cfg <- ask
+--   liftIO $ putStrLn (view assetConfig cfg)
+
+main :: (MonadShell m, MonadIO m) => m ()
+main = do
+  runReaderT (readConfig) hcfg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 newtype Hephaestus a =
   Hephaestus {
     appHeph :: ReaderT HephConfig IO a
@@ -33,18 +68,3 @@ newtype Hephaestus a =
     MonadReader HephConfig,
     MonadIO
   )
-
-data Env = Env
-  { envLog     :: String -> IO ()
-  }
-
-env = Env { envLog = \x -> putStrLn x }
-
-modifyCfg :: (MonadReader Env m, MonadIO m) => String -> m ()
-modifyCfg f = do
-  cfg <- ask
-  liftIO $ envLog cfg f
-
-main :: IO ()
-main = do
-  runReader (modifyCfg "la") env
