@@ -8,12 +8,12 @@ module Cli where
 import Error
 import Config
 import Parser
-import Shell
+-- import Shell
 
 
 import Control.Monad.Reader
 import Control.Monad.Except
-import Control.Lens as L
+import Control.Lens
 
 
 hcfg     = HephConfig "asset-path" "ck-path"
@@ -24,27 +24,50 @@ asseterr = ParserTErr "invalid path"
 herr     = HephSPLError splerr
 
 
+type Command = String
+--
 
+class Monad m => MonadLog m where
+  shLog :: String -> m ()
 
 class Monad m => MonadShell m where
-  getCommand :: m String
-  runCommand :: String -> m ()
+  getCommand :: m Command
+  runCommand :: Command -> m ()
 
 
-instance (HasHephConfig env, MonadIO m) => MonadShell (ReaderT env m) where
-  getCommand = do
-    getLine
-  runCommand c = do
-    liftIO $ putStrLn c
+instance MonadShell IO where
+  getCommand   = getLine
+  runCommand c = putStrLn c
 
--- readConfig :: (MonadReader env m, HasHephConfig env, MonadIO m) => m ()
+instance MonadLog IO where
+  shLog c = putStrLn c
+
+
+shell :: (MonadShell m, MonadIO m, MonadLog m) => m ()
+shell = do
+  cmd <- getCommand
+  shLog ("running command " ++ cmd)
+  runCommand cmd
+  shell
+
+
+mainShell :: IO ()
+mainShell = shell
+
+-- readConfig :: (MonadReader HephConfig m, MonadIO m) => m ()
 -- readConfig = do
 --   cfg <- ask
 --   liftIO $ putStrLn (view assetConfig cfg)
-
-main :: (MonadShell m, MonadIO m) => m ()
-main = do
-  runReaderT (readConfig) hcfg
+--
+--
+-- modifyConfig :: (MonadHephConfig m) => String -> m ()
+-- modifyConfig s = do
+--   modifyAssetCfg s
+--
+--
+-- main :: (MonadIO m) => m ()
+-- main = do
+--   runReaderT (readConfig) hcfg
 
 
 
