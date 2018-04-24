@@ -3,30 +3,50 @@
 module Config where
 
 import Control.Lens
+import Control.Monad.Reader
+
+import Data.FM.Types
+import Data.SPL
 
 
-type Path        = String
-type AssetConfig = Path
-type CKConfig    = Path
+--
+-- This monad declaration is used to regain purity in the functions that will
+-- call modifyAssetCfg, and functions that perform IO Actions in general
+--
+-- class Monad m => MonadHephConfig m where
+--   -- readConfig     :: m HephConfig
+--   modifyAssetCfg :: String -> m ()
+--
+-- instance (HasHephConfig env, MonadIO m) => MonadHephConfig (ReaderT env m) where
+--   modifyAssetCfg s = do
+--     cfg <- ask
+--     liftIO $ putStrLn (view fm cfg)
 
 
+
+--
+-- LENS MANUAL DEFINITION FOR HEPHCONFIG VARIABLES
+--
 data HephConfig =
   HephConfig {
-    _assetConfig :: AssetConfig,
-    _ckConfig    :: CKConfig
-    -- _state       :: String
+    _asset :: String,
+    _fm    :: String,
+    _ck    :: String
   } deriving (Show)
 
 
 class HasHephConfig t where
   hephConfig  :: Lens' t HephConfig
-  assetConfig :: Lens' t AssetConfig
-  ckConfig    :: Lens' t CKConfig
+  asset       :: Lens' t String
+  fm          :: Lens' t String
+  ck          :: Lens' t String
 
 
 instance HasHephConfig HephConfig where
   hephConfig  = id
-  assetConfig =
-    lens _assetConfig (\h a -> h { _assetConfig = a })
-  ckConfig    =
-    lens _ckConfig (\h b -> h { _ckConfig = b })
+  asset =
+    lens _asset (\h a -> h { _asset = a })
+  fm    =
+    lens _fm (\h b -> h { _fm = b })
+  ck    =
+    lens _ck (\h c -> h { _ck = c })
