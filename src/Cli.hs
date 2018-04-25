@@ -9,14 +9,16 @@ import Error
 import Config
 import Parser
 -- import Shell
-
+import Data.FM.Types
+import Data.Tree
 
 import Control.Monad.Reader
 import Control.Monad.Except
 import Control.Lens
 
+fmcfg    = FMConfig "fm-path" (FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) [])
 
-hcfg     = HephConfig "asset-path" "fm-path" "ck-path"
+envv     = Env "asset-path" fmcfg "ck-path"
 
 splerr   = FeatureModelErr "invalid feature model"
 asseterr = ParserTErr "invalid path"
@@ -31,60 +33,76 @@ type Command = String
 class Monad m => MonadLog m where
   shLog :: String -> m ()
 
-class Monad m => MonadShell m where
-  getCommand    :: m Command
-  handleCommand :: Command -> m ()
-
-
--- Monadic operations behaviour when composing MonadShell with IO
-instance MonadShell IO where
-  getCommand   = getLine
-  handleCommand c = putStrLn c
-
-
 instance MonadLog IO where
   shLog c = putStrLn c
 
 
-shell :: (MonadShell m, MonadIO m, MonadLog m)
-         => m ()
-shell = do
-  cmd <- getCommand
-  shLog ("running command " ++ cmd)
-  handleCommand cmd
-  shell
+class Monad m => MonadShell m where
+  handleCommand :: Command -> m ()
 
-shell2 :: Hephaestus ()
-shell2 = do
-  cmd <- liftIO $ getLine
-  liftIO $ putStrLn ("running command " ++ cmd)
-  -- handleCommand cmd
-  shell2
--- readConfig :: (MonadReader HephConfig m, MonadIO m) => m ()
--- readConfig = do
---   cfg <- ask
---   liftIO $ putStrLn (view assetConfig cfg)
---
---
--- modifyConfig :: (MonadHephConfig m) => String -> m ()
--- modifyConfig s = do
---   modifyAssetCfg s
---
---
+-- Monadic operations behaviour when composing MonadShell with IO
+instance MonadShell IO where
+  handleCommand c = putStrLn c
+
+
+shell :: (MonadShell m, MonadIO m, MonadLog m, MonadParser FeatureModel m)
+         => m ()
+shell = welcome >> shellLoop
+  where
+    shellLoop = do
+      cmd <- liftIO $ getLine
+      shLog ("running command " ++ cmd)
+      handleCommand cmd
+      fm <- fmmain
+      liftIO $ print fm
+      shellLoop
+
+
+testP :: (MonadParser FeatureModel m, MonadIO m) => m ()
+testP = do
+  fm <- fmmain
+  liftIO $ print fm
+
+
+
+-- Reading FM config through type class type constraints and lenses
+-- We are saying that:
+-- readConfig is an action which is a Monad that might read config of type env
+-- from MonadReader
+readConfig :: (MonadReader env m, HasFMConfig env) => m FMConfig
+readConfig = do
+  cfg <- ask
+  return (view fmConfig cfg)
+
+
+welcome :: (MonadIO m, MonadLog m) => m ()
+welcome = do
+  shLog ("---------------------------------------" )
+  shLog ("---------- Hephaestus - Shell ---------" )
+  shLog ("--" )
+  shLog ("--" )
+  shLog ("-- type 'help' to see available commands" )
+  shLog ("--" )
+  shLog ("-- loading your SPL:" )
+  shLog ("--" )
+  shLog ("-- 1- load fm <fm-path>" )
+  shLog ("-- 2- load ck <ck-path>" )
+  shLog ("-- 3- load asset ??" )
+  shLog ("--" )
+
+
+
 -- main :: (MonadIO m) => m ()
 -- main = do
 --   runReaderT (readConfig) hcfg
 
-
-
-
 newtype Hephaestus a =
   Hephaestus {
-    appHeph :: ReaderT HephConfig IO a
+    appHeph :: ReaderT Env IO a
     -- appHeph :: ReaderT HephConfig (ExceptT HephError IO) a
   } deriving (
     Functor, Applicative, Monad,
-    MonadReader HephConfig,
+    MonadReader Env,
     MonadIO
   )
 

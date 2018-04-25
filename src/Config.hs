@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Config where
 
@@ -10,40 +10,51 @@ import Data.SPL
 
 
 --
--- This monad declaration is used to regain purity in the functions that will
--- call modifyAssetCfg, and functions that perform IO Actions in general
---
--- class Monad m => MonadHephConfig m where
---   -- readConfig     :: m HephConfig
---   modifyAssetCfg :: String -> m ()
---
--- instance (HasHephConfig env, MonadIO m) => MonadHephConfig (ReaderT env m) where
---   modifyAssetCfg s = do
---     cfg <- ask
---     liftIO $ putStrLn (view fm cfg)
-
-
-
---
 -- LENS MANUAL DEFINITION FOR HEPHCONFIG VARIABLES
 --
-data HephConfig =
-  HephConfig {
+
+
+data Env =
+  Env {
     _asset :: String,
-    _fm    :: String,
+    _fm    :: FMConfig,
     _ck    :: String
   } deriving (Show)
 
 
-class HasHephConfig t where
-  hephConfig  :: Lens' t HephConfig
+data FMConfig =
+  FMConfig {
+    _path     :: String,
+    _parsedFM :: FeatureModel
+  } deriving (Show)
+
+
+class HasFMConfig t where
+  fmConfig :: Lens' t FMConfig
+  path     :: Lens' t String
+  parsedFM :: Lens' t FeatureModel
+
+
+instance HasFMConfig FMConfig where
+  fmConfig = id
+  path     =
+    lens _path (\c a -> c { _path = a })
+  parsedFM =
+    lens _parsedFM (\c b -> c { _parsedFM = b })
+
+instance HasFMConfig Env where
+  fmConfig =
+    lens _fm (\env fm -> env { _fm = fm})
+
+
+class HasEnv t where
+  env         :: Lens' t Env
   asset       :: Lens' t String
-  fm          :: Lens' t String
+  fm          :: Lens' t FMConfig
   ck          :: Lens' t String
 
-
-instance HasHephConfig HephConfig where
-  hephConfig  = id
+instance HasEnv Env where
+  env   = id
   asset =
     lens _asset (\h a -> h { _asset = a })
   fm    =
