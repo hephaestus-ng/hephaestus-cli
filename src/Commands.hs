@@ -17,50 +17,50 @@ import Control.Monad.Reader
 import Config
 
 
-help :: IO ()
+help :: (MonadIO m) => m ()
 help = do
-  putStrLn "---------------------------------------------------------"
-  putStrLn "$ hephaestus-shell --------------------------------------"
-  putStrLn "---------------------------------------------------------"
-  putStrLn "                                                         "
-  putStrLn "hephaestus-shell currently offers the following commands:"
-  putStrLn "                                                         "
-  putStrLn "$ load <type> <path-of-file>"
-  putStrLn "  where load types are "
-  putStrLn "    - feature model with file type .xml"
-  putStrLn "      - $ load fm file.xml "
-  putStrLn "                                                         "
-  putStrLn "    - configuration knowledge with file type .ck "
-  putStrLn "      - $ load ck file.ck "
-  putStrLn "---------------------------------------------------------"
+  liftIO $ putStrLn "---------------------------------------------------------"
+  liftIO $ putStrLn "$ hephaestus-shell --------------------------------------"
+  liftIO $ putStrLn "---------------------------------------------------------"
+  liftIO $ putStrLn "                                                         "
+  liftIO $ putStrLn "hephaestus-shell currently offers the following commands:"
+  liftIO $ putStrLn "                                                         "
+  liftIO $ putStrLn "$ load <type> <path-of-file>"
+  liftIO $ putStrLn "  where load types are "
+  liftIO $ putStrLn "    - feature model with file type .xml"
+  liftIO $ putStrLn "      - $ load fm file.xml "
+  liftIO $ putStrLn "                                                         "
+  liftIO $ putStrLn "    - configuration knowledge with file type .ck "
+  liftIO $ putStrLn "      - $ load ck file.ck "
+  liftIO $ putStrLn "---------------------------------------------------------"
 
 
 
-type Path = String
-
-data Load a =
-  Load {
-    run :: Path -> a
-  }
-
-loadFM :: Load FeatureModel
-loadFM =
-  Load {
-    run = do
-      return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
-    }
-
-loadF :: Load Feature
-loadF =
-  Load {
-    run = do
-      return $ Feature "iris" BasicFeature Mandatory
-    }
-
-
-load :: Load a -> Path -> a
-load dictionary p = do
-  run dictionary p
+-- type Path = String
+--
+-- data Load a =
+--   Load {
+--     run :: Path -> a
+--   }
+--
+-- loadFM :: Load FeatureModel
+-- loadFM =
+--   Load {
+--     run = do
+--       return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
+--     }
+--
+-- loadF :: Load Feature
+-- loadF =
+--   Load {
+--     run = do
+--       return $ Feature "iris" BasicFeature Mandatory
+--     }
+--
+--
+-- load :: Load a -> Path -> a
+-- load dictionary p = do
+--   run dictionary p
 
 
 -- class Load a where

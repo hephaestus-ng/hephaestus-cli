@@ -73,33 +73,6 @@ loadCK = do
 
 
 
--- THIS PARSES THE COMMAND "LOAD FM FM.IDE"
--- runPPP path = do
---   input <- readFile path
---   result <- runParserT parseFeatureIDE () "" input
---   return result
-
-parseCommand :: HephParser u FeatureModel
-parseCommand =
-  (parseLoad)
-
-parseLoad :: HephParser u FeatureModel
-parseLoad =
-  string "load" >> many space >> many1 letter >>= \t ->
-    case t of
-      "fm" -> many space >> many1 anyChar >>= \path -> runParserFM path
-      -- "ck" -> liftIO $ putStrLn "ck222"
-
-runParserFM :: String -> HephParser u FeatureModel
-runParserFM path = do
-  result <- lift $ parseFromFile parseFeatureIDE path
-  if (isRight result) then
-    return (fromRight' result)
-  else
-    return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
-
-
-
 
 
 

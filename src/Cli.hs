@@ -9,7 +9,7 @@ module Cli where
 import Error
 import Config
 import Parser
-import Types
+import Commands
 import Text.Parsec
 
 import Data.FM.Types
@@ -31,59 +31,46 @@ asseterr = ParserTErr "invalid path"
 herr     = HephSPLError splerr
 
 
-
 class Monad m => MonadLog m where
   shLog :: String -> m ()
+  shGet :: m String
 
 instance MonadLog IO where
-  shLog c = putStrLn c
+  shLog c = putStrLn c >> putStrLn ""
+  shGet   = getLine
 
 
-shell :: (MonadIO m, MonadParser FeatureModel m) => m ()
-shell = liftIO $ welcome >> shellLoop
+shell :: (MonadParser FeatureModel m,
+         MonadParser (ConfigurationKnowledge TestAsset) m,
+         MonadLog m, MonadIO m) => m ()
+shell = welcome >> shellLoop
   where
     shellLoop = do
       cmd <- liftIO $ getLine
-      -- handleCmd cmd
-      fm <- loadFM "fm.ide"
-      liftIO $ print fm
+      case cmd of
+        "help"    -> help
+        "load fm" -> load "fm"
+        "load ck" -> load "ck"
       shellLoop
 
-
-
--- lloadFM ::
 
 load :: (MonadParser FeatureModel m,
          MonadParser (ConfigurationKnowledge TestAsset) m,
          MonadLog m, MonadIO m) => String -> m ()
-load s = do
-  shLog "loading asset"
-  res <- loadFM "fm.ide"
+load "fm" = do
+  shLog ("& loading feature model to hephaestus environment")
+  shLog ("& fm.xml path:")
+  path <- shGet
+  res <- loadFM path
   liftIO $ print res
-  shLog "agora o ck"
-  res2 <- loadCK
-  shLog "agora a shell"
-  shell
 
+load "ck" = do
+  shLog ("  loading configuration knowledge to hephaestus environment")
+  shLog ("  product.ck path:")
+  path <- shGet
+  res <- loadCK path
+  liftIO $ print res
 
--- handleCmd :: String -> IO ()
--- handleCmd cmd = do
---   shLog ("running command "++cmd)
---   case cmd of
---     "load fm" -> loadFM
---     "load ck" -> loadCK
-
-  -- liftIO $ putStrLn result
-
-
--- handleLoadFM :: IO ()
--- handleLoadFM = do
---   return $ loadFM "fm.ide"
-
-testP :: IO ()
-testP = do
-  fm <- loadFM "fm.ide"
-  liftIO $ print fm
 
 readConfig :: (MonadReader env m, HasFM env) => m FM
 readConfig = do
@@ -95,16 +82,11 @@ welcome :: (MonadIO m, MonadLog m) => m ()
 welcome = do
   shLog ("---------------------------------------" )
   shLog ("---------- Hephaestus - Shell ---------" )
-  shLog ("--" )
-  shLog ("--" )
   shLog ("-- type 'help' to see available commands" )
-  shLog ("--" )
-  shLog ("-- loading your SPL:" )
-  shLog ("--" )
-  shLog ("-- 1- load fm <fm-path>" )
-  shLog ("-- 2- load ck <ck-path>" )
-  shLog ("-- 3- load asset ??" )
-  shLog ("--" )
+  shLog ("-- load your SPL:" )
+  shLog ("   1- load fm <fm-path>" )
+  shLog ("   2- load ck <ck-path>" )
+  shLog ("   3- load asset ??" )
 
 
 
