@@ -11,63 +11,92 @@ import Control.Monad.Reader
 import Data.Tree
 import Data.Either.Combinators
 
+import Commands
+
 import Parser.XML.Main
 import Parser.CK
 import Data.FM.Types
 import Data.SPL
 
 
-
-type Result a = (String, a)
-
-
 type HephParser u a = ParsecT String u IO a
 
 
+
 class Monad m => MonadParser a m where
-  runHephParser :: String -> m a
+  runHephParser :: String -> m (Either ParseError a)
+  purify        :: (Either ParseError a) -> m a
 
-
--- a intenção é parametrizar a função de rodar um parser do Hephaestus
--- pra indicar seu tipo de retorno
 
 instance MonadParser FeatureModel IO where
   runHephParser path = do
     result <- parseFromFile parseFeatureIDE path
-    if (isRight result) then
-      return (fromRight' result)
-    else
-      return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
-
+    return result
+  purify res = do
+    return (fromRight' res)
 
 instance MonadParser (ConfigurationKnowledge TestAsset) IO where
   runHephParser path = do
     result <- parseFromFile parseCK path
-    liftIO $ putStrLn "bora"
-    if (isRight result) then
-      do
-        liftIO $ putStrLn "bora2"
-        return (fromRight' result)
-    else
-      return $ ck
-
-
--- class HasParserFM a where
---   getParserFM :: a -> String -> m FeatureModel
---
--- instance (MonadParser FeatureModel m) => HasParserFM m where
---   getParserFM path = runHephParser path
-
-fmmain :: (MonadParser FeatureModel m) => m FeatureModel
-fmmain = runHephParser "fm.ide"
-
-ckmain :: (MonadParser (ConfigurationKnowledge TestAsset) m) => m (ConfigurationKnowledge TestAsset)
-ckmain = runHephParser "test.ck"
+    return result
+  purify res = do
+    return (fromRight' res)
 
 
 
+loadFM :: (MonadParser FeatureModel m) => String -> m FeatureModel
+loadFM f = do
+  result <- runHephParser f
+  result <- purify result
+  return result
+
+loadFM2 :: String -> IO FeatureModel
+loadFM2 f = do
+  result <- runHephParser f
+  result <- purify result
+  return result
+
+loadCK :: (MonadParser (ConfigurationKnowledge TestAsset) m, MonadIO m) => m (ConfigurationKnowledge TestAsset)
+loadCK = do
+  result <- runHephParser "test.ck"
+  if (isRight result) then
+    liftIO $ putStrLn "ck loaded."
+  else
+    liftIO $ putStrLn "ck error."
+  result <- purify result
+  return result
 
 
+
+
+
+
+
+
+-- THIS PARSES THE COMMAND "LOAD FM FM.IDE"
+-- runPPP path = do
+--   input <- readFile path
+--   result <- runParserT parseFeatureIDE () "" input
+--   return result
+
+parseCommand :: HephParser u FeatureModel
+parseCommand =
+  (parseLoad)
+
+parseLoad :: HephParser u FeatureModel
+parseLoad =
+  string "load" >> many space >> many1 letter >>= \t ->
+    case t of
+      "fm" -> many space >> many1 anyChar >>= \path -> runParserFM path
+      -- "ck" -> liftIO $ putStrLn "ck222"
+
+runParserFM :: String -> HephParser u FeatureModel
+runParserFM path = do
+  result <- lift $ parseFromFile parseFeatureIDE path
+  if (isRight result) then
+    return (fromRight' result)
+  else
+    return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
 
 
 
@@ -93,33 +122,3 @@ instance Asset TestAsset where
   parserT    = taParser
 
 ------------
-
-
-
------------- FUNC DEFINITIONS WITHOUT MONADIC TYPECLASSES
-
-runPP s = runParserT parseCommand () "" s
-
-parseCommand :: HephParser u FeatureModel
-parseCommand =
-  (parseLoad)
-
-parseLoad :: HephParser u FeatureModel
-parseLoad =
-  string "load" >> many space >> many1 letter >>= \t ->
-    case t of
-      "fm" -> many space >> many1 anyChar >>= \path -> runParserFM path
-      -- "ck" -> liftIO $ putStrLn "ck222"
-
-
-runParserFM :: String -> HephParser u FeatureModel
-runParserFM path = do
-  result <- lift $ parseFromFile parseFeatureIDE path
-  if (isRight result) then
-    return (fromRight' result)
-  else
-    return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
-
-
-parseBuild :: HephParser u FeatureModel
-parseBuild = undefined

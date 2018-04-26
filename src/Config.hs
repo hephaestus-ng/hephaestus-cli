@@ -17,32 +17,32 @@ import Data.SPL
 data Env =
   Env {
     _asset :: String,
-    _fm    :: FMConfig,
+    _fm    :: FM,
     _ck    :: String
   } deriving (Show)
 
 
-data FMConfig =
-  FMConfig {
+data FM =
+  FM {
     _path     :: String,
     _parsedFM :: FeatureModel
   } deriving (Show)
 
 
-class HasFMConfig t where
-  fmConfig :: Lens' t FMConfig
+class HasFM t where
+  fmConfig :: Lens' t FM
   path     :: Lens' t String
   parsedFM :: Lens' t FeatureModel
 
 
-instance HasFMConfig FMConfig where
+instance HasFM FM where
   fmConfig = id
   path     =
     lens _path (\c a -> c { _path = a })
   parsedFM =
     lens _parsedFM (\c b -> c { _parsedFM = b })
 
-instance HasFMConfig Env where
+instance HasFM Env where
   fmConfig =
     lens _fm (\env fm -> env { _fm = fm})
 
@@ -50,7 +50,7 @@ instance HasFMConfig Env where
 class HasEnv t where
   env         :: Lens' t Env
   asset       :: Lens' t String
-  fm          :: Lens' t FMConfig
+  fm          :: Lens' t FM
   ck          :: Lens' t String
 
 instance HasEnv Env where

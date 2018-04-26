@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 
 -- extension used for deriving instances to hephaestus type
@@ -8,15 +9,19 @@ module Cli where
 import Error
 import Config
 import Parser
--- import Shell
+import Types
+import Text.Parsec
+
 import Data.FM.Types
+import Data.SPL
 import Data.Tree
+import Data.Either.Combinators
 
 import Control.Monad.Reader
 import Control.Monad.Except
 import Control.Lens
 
-fmcfg    = FMConfig "fm-path" (FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) [])
+fmcfg    = FM "fm-path" (FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) [])
 
 envv     = Env "asset-path" fmcfg "ck-path"
 
@@ -26,10 +31,7 @@ asseterr = ParserTErr "invalid path"
 herr     = HephSPLError splerr
 
 
-type Command = String
 
-
--- Type class definitions
 class Monad m => MonadLog m where
   shLog :: String -> m ()
 
@@ -37,39 +39,53 @@ instance MonadLog IO where
   shLog c = putStrLn c
 
 
-class Monad m => MonadShell m where
-  handleCommand :: Command -> m ()
-
--- Monadic operations behaviour when composing MonadShell with IO
-instance MonadShell IO where
-  handleCommand c = putStrLn c
-
-
-shell :: (MonadShell m, MonadIO m, MonadLog m, MonadParser FeatureModel m)
-         => m ()
-shell = welcome >> shellLoop
+shell :: (MonadIO m, MonadParser FeatureModel m) => m ()
+shell = liftIO $ welcome >> shellLoop
   where
     shellLoop = do
       cmd <- liftIO $ getLine
-      shLog ("running command " ++ cmd)
-      handleCommand cmd
-      fm <- fmmain
+      -- handleCmd cmd
+      fm <- loadFM "fm.ide"
       liftIO $ print fm
       shellLoop
 
 
-testP :: (MonadParser FeatureModel m, MonadIO m) => m ()
+
+-- lloadFM ::
+
+load :: (MonadParser FeatureModel m,
+         MonadParser (ConfigurationKnowledge TestAsset) m,
+         MonadLog m, MonadIO m) => String -> m ()
+load s = do
+  shLog "loading asset"
+  res <- loadFM "fm.ide"
+  liftIO $ print res
+  shLog "agora o ck"
+  res2 <- loadCK
+  shLog "agora a shell"
+  shell
+
+
+-- handleCmd :: String -> IO ()
+-- handleCmd cmd = do
+--   shLog ("running command "++cmd)
+--   case cmd of
+--     "load fm" -> loadFM
+--     "load ck" -> loadCK
+
+  -- liftIO $ putStrLn result
+
+
+-- handleLoadFM :: IO ()
+-- handleLoadFM = do
+--   return $ loadFM "fm.ide"
+
+testP :: IO ()
 testP = do
-  fm <- fmmain
+  fm <- loadFM "fm.ide"
   liftIO $ print fm
 
-
-
--- Reading FM config through type class type constraints and lenses
--- We are saying that:
--- readConfig is an action which is a Monad that might read config of type env
--- from MonadReader
-readConfig :: (MonadReader env m, HasFMConfig env) => m FMConfig
+readConfig :: (MonadReader env m, HasFM env) => m FM
 readConfig = do
   cfg <- ask
   return (view fmConfig cfg)
@@ -92,14 +108,10 @@ welcome = do
 
 
 
--- main :: (MonadIO m) => m ()
--- main = do
---   runReaderT (readConfig) hcfg
 
 newtype Hephaestus a =
   Hephaestus {
     appHeph :: ReaderT Env IO a
-    -- appHeph :: ReaderT HephConfig (ExceptT HephError IO) a
   } deriving (
     Functor, Applicative, Monad,
     MonadReader Env,
