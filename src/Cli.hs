@@ -58,18 +58,20 @@ load :: (MonadParser FeatureModel m,
          MonadParser (ConfigurationKnowledge TestAsset) m,
          MonadLog m, MonadIO m) => String -> m ()
 load "fm" = do
-  shLog ("& loading feature model to hephaestus environment")
-  shLog ("& fm.xml path:")
+  shLog ("  ")
+  shLog ("  loading feature model to hephaestus environment")
+  shLog ("  fm.xml path:")
   path <- shGet
   res <- loadFM path
   liftIO $ print res
 
 load "ck" = do
+  shLog ("  ")
   shLog ("  loading configuration knowledge to hephaestus environment")
   shLog ("  product.ck path:")
   path <- shGet
-  res <- loadCK path
-  liftIO $ print res
+  res <- loadCK
+  liftIO $ putStrLn "ck loaded"
 
 
 readConfig :: (MonadReader env m, HasFM env) => m FM
