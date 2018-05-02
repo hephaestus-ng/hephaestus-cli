@@ -2,16 +2,13 @@
 {-# LANGUAGE FlexibleInstances  #-}
 {-# LANGUAGE FlexibleContexts  #-}
 
-module Parser where
-
+module Class.Parser where
 
 import Text.Parsec
 import Text.Parsec.String
-import Control.Monad.Reader
-import Data.Tree
-import Data.Either.Combinators
 
-import Commands
+import Control.Monad.Reader
+import Data.Either.Combinators
 
 import Parser.XML.Main
 import Parser.CK
@@ -20,7 +17,6 @@ import Data.SPL
 
 
 type HephParser u a = ParsecT String u IO a
-
 
 
 class Monad m => MonadParser a m where
@@ -56,22 +52,11 @@ loadFM2 f = do
   result <- purify result
   return result
 
-loadCK :: (MonadParser (ConfigurationKnowledge TestAsset) m, MonadIO m) => m (ConfigurationKnowledge TestAsset)
+loadCK :: (MonadParser (ConfigurationKnowledge TestAsset) m) => m (ConfigurationKnowledge TestAsset)
 loadCK = do
   result <- runHephParser "test.ck"
-  if (isRight result) then
-    liftIO $ putStrLn "ck loaded."
-  else
-    liftIO $ putStrLn "ck error."
   result <- purify result
   return result
-
-
-
-
-
-
-
 
 
 

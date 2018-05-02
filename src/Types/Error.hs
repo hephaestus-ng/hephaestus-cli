@@ -1,4 +1,4 @@
-module Error where
+module Types.Error where
 
 import Control.Lens
 

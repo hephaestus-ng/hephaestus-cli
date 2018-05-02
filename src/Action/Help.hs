@@ -1,20 +1,6 @@
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
+module Action.Help where
 
-module Commands where
-
-
-import Data.FM.Types
-import Data.Either.Combinators
-import Text.Parsec
-import Text.Parsec.String
-
-import Parser.XML.Main
-import Parser.CK
-import Data.Tree
-import Control.Monad.Reader
-
-import Config
+import Control.Monad.IO.Class
 
 
 help :: (MonadIO m) => m ()
@@ -35,40 +21,19 @@ help = do
   liftIO $ putStrLn "---------------------------------------------------------"
 
 
-
--- type Path = String
---
--- data Load a =
---   Load {
---     run :: Path -> a
---   }
---
--- loadFM :: Load FeatureModel
--- loadFM =
---   Load {
---     run = do
---       return $ FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) []
---     }
---
--- loadF :: Load Feature
--- loadF =
---   Load {
---     run = do
---       return $ Feature "iris" BasicFeature Mandatory
---     }
---
---
--- load :: Load a -> Path -> a
--- load dictionary p = do
---   run dictionary p
-
-
--- class Load a where
---   run :: Path -> a
---
--- instance Load Feature where
---   run p = Feature "n" BasicFeature Optional
---
---
--- load :: (Load Feature) => Path -> Feature
--- load p = run p
+welcome :: (MonadIO m) => m ()
+welcome = do
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "---------------------------------------"
+  liftIO $ putStrLn "---------- Hephaestus - Shell ---------"
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "-- type 'help' to see available commands"
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "-- loading your SPL:"
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "-- 1- load fm <fm-path>"
+  liftIO $ putStrLn "-- 2- load ck <ck-path>"
+  liftIO $ putStrLn "-- 3- load asset ??"
+  liftIO $ putStrLn ""

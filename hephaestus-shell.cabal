@@ -5,11 +5,11 @@
 
 -- hash: 84e581f837a2759ad143aec36ec8bf895d0e9fb7f2aa055bac31b3f802fafaa4
 
-name:           hephaestus-cli
+name:           hephaestus-shell
 version:        0.1.0.0
-description:    Please see the README on Github at <https://github.com/hephaestus-ng/hephaestus-cli#readme>
-homepage:       https://github.com/hephaestus-ng/hephaestus-cli#readme
-bug-reports:    https://github.com/hephaestus-ng/hephaestus-cli/issues
+description:    Please see the README on Github at <https://github.com/hephaestus-ng/hephaestus-shell#readme>
+homepage:       https://github.com/hephaestus-ng/hephaestus-shell#readme
+bug-reports:    https://github.com/hephaestus-ng/hephaestus-shell/issues
 author:         Thiago Figueiredo
 maintainer:     thiagofigueiredo777@gmail.com
 copyright:      CC
@@ -24,7 +24,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/hephaestus-ng/hephaestus-cli
+  location: https://github.com/hephaestus-ng/hephaestus-shell
 
 library
   hs-source-dirs:
@@ -37,12 +37,12 @@ library
     , hephaestus-spl
     , lens
   exposed-modules:
-      Cli
+      shell
   other-modules:
-      Paths_hephaestus_cli
+      Paths_hephaestus_shell
   default-language: Haskell2010
 
-executable hephaestus-cli-exe
+executable hephaestus-shell-exe
   main-is: Main.hs
   hs-source-dirs:
       app
@@ -50,16 +50,16 @@ executable hephaestus-cli-exe
   build-depends:
       base >=4.7 && <5
     , containers
-    , hephaestus-cli
+    , hephaestus-shell
     , hephaestus-fm
     , hephaestus-sc
     , hephaestus-spl
     , lens
   other-modules:
-      Paths_hephaestus_cli
+      Paths_hephaestus_shell
   default-language: Haskell2010
 
-test-suite hephaestus-cli-test
+test-suite hephaestus-shell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   hs-source-dirs:
@@ -68,11 +68,11 @@ test-suite hephaestus-cli-test
   build-depends:
       base >=4.7 && <5
     , containers
-    , hephaestus-cli
+    , hephaestus-shell
     , hephaestus-fm
     , hephaestus-sc
     , hephaestus-spl
     , lens
   other-modules:
-      Paths_hephaestus_cli
+      Paths_hephaestus_shell
   default-language: Haskell2010

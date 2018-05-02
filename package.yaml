@@ -1,6 +1,6 @@
-name:                hephaestus-cli
+name:                hephaestus-shell
 version:             0.1.0.0
-github:              "hephaestus-ng/hephaestus-cli"
+github:              "hephaestus-ng/hephaestus-shell"
 license:             BSD3
 author:              "Thiago Figueiredo"
 maintainer:          "thiagofigueiredo777@gmail.com"
@@ -17,7 +17,7 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on Github at <https://github.com/hephaestus-ng/hephaestus-cli#readme>
+description:         Please see the README on Github at <https://github.com/hephaestus-ng/hephaestus-shell#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -31,7 +31,7 @@ library:
   source-dirs: src
 
 executables:
-  hephaestus-cli-exe:
+  hephaestus-shell-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -39,7 +39,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hephaestus-cli
+    - hephaestus-shell
     - hephaestus-fm
     - hephaestus-spl
     - hephaestus-sc
@@ -47,7 +47,7 @@ executables:
     - containers
 
 tests:
-  hephaestus-cli-test:
+  hephaestus-shell-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -55,7 +55,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - hephaestus-cli
+    - hephaestus-shell
     - hephaestus-fm
     - hephaestus-spl
     - hephaestus-sc

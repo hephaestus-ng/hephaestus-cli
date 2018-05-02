@@ -1,17 +1,19 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Config where
+module Types.State where
 
 import Control.Lens
-import Control.Monad.Reader
 
 import Data.FM.Types
 import Data.SPL
 
 
---
--- LENS MANUAL DEFINITION FOR HEPHCONFIG VARIABLES
---
+
+data FM =
+  FM {
+    _path     :: String,
+    _parsedFM :: FeatureModel
+  } deriving (Show)
 
 
 data Env =
@@ -22,19 +24,13 @@ data Env =
   } deriving (Show)
 
 
-data FM =
-  FM {
-    _path     :: String,
-    _parsedFM :: FeatureModel
-  } deriving (Show)
-
 
 class HasFM t where
   fmConfig :: Lens' t FM
   path     :: Lens' t String
   parsedFM :: Lens' t FeatureModel
 
-
+--
 instance HasFM FM where
   fmConfig = id
   path     =
@@ -44,8 +40,7 @@ instance HasFM FM where
 
 instance HasFM Env where
   fmConfig =
-    lens _fm (\env fm -> env { _fm = fm})
-
+    lens _fm (\env fm -> env { _fm = fm })
 
 class HasEnv t where
   env         :: Lens' t Env
