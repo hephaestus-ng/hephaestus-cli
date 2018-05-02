@@ -2,7 +2,9 @@
 
 module Action.Load where
 
-import Control.Monad.IO.Class
+import Control.Monad.Reader
+
+import Types.State
 
 import Data.FM.Types
 import Data.SPL
@@ -10,7 +12,8 @@ import Data.SPL
 import Class.Parser
 
 
-load :: ( MonadParser FeatureModel m,
+load :: (
+          MonadParser FeatureModel m,
           MonadParser (ConfigurationKnowledge TestAsset) m,
           MonadIO m
         ) => String -> m ()
@@ -28,5 +31,5 @@ load "ck" = do
   liftIO $ putStrLn ("  loading configuration knowledge to hephaestus environment")
   liftIO $ putStrLn ("  product.ck path:")
   path <- liftIO $ getLine
-  res <- loadCK
+  res <- loadCK path
   liftIO $ putStrLn "ck loaded"

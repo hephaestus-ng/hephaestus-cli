@@ -3,6 +3,10 @@ module Types.Error where
 import Control.Lens
 
 
+splerr   = FeatureModelErr "invalid feature model"
+asseterr = ParserTErr "invalid path"
+
+herr     = HephSPLError splerr
 
 data HephError = HephSPLError { hsplError :: SPLError }
                | HephAssetError { hassetError :: AssetError }

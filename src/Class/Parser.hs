@@ -28,15 +28,13 @@ instance MonadParser FeatureModel IO where
   runHephParser path = do
     result <- parseFromFile parseFeatureIDE path
     return result
-  purify res = do
-    return (fromRight' res)
+  purify res = return (fromRight' res)
 
-instance MonadParser (ConfigurationKnowledge TestAsset) IO where
+instance (Asset a) => MonadParser (ConfigurationKnowledge a) IO where
   runHephParser path = do
     result <- parseFromFile parseCK path
     return result
-  purify res = do
-    return (fromRight' res)
+  purify res = return (fromRight' res)
 
 
 
@@ -46,15 +44,10 @@ loadFM f = do
   result <- purify result
   return result
 
-loadFM2 :: String -> IO FeatureModel
-loadFM2 f = do
-  result <- runHephParser f
-  result <- purify result
-  return result
 
-loadCK :: (MonadParser (ConfigurationKnowledge TestAsset) m) => m (ConfigurationKnowledge TestAsset)
-loadCK = do
-  result <- runHephParser "test.ck"
+loadCK :: (MonadParser (ConfigurationKnowledge TestAsset) m) => String -> m (ConfigurationKnowledge TestAsset)
+loadCK f = do
+  result <- runHephParser f
   result <- purify result
   return result
 

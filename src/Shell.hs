@@ -2,8 +2,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 
--- extension used for deriving instances to hephaestus type
-
 module Shell where
 
 import Types.Error
@@ -14,40 +12,20 @@ import Class.Parser
 import Action.Help
 import Action.Load
 
-import Text.Parsec
-
-import Data.FM.Types
-import Data.SPL
-import Data.Tree
-import Data.Either.Combinators
+-- import Data.FM.Types
+-- import Data.SPL
 
 import Control.Monad.Reader
-import Control.Monad.Except
+import Control.Monad.State
 import Control.Lens
 
 
-fmcfg    = FM "fm-path" (FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) [])
 
-envv     = Env "asset-path" fmcfg "ck-path"
-
-splerr   = FeatureModelErr "invalid feature model"
-asseterr = ParserTErr "invalid path"
-
-herr     = HephSPLError splerr
-
-
-
-
-shell :: ( MonadParser FeatureModel m,
-           MonadParser (ConfigurationKnowledge TestAsset) m,
-           MonadIO m
-         ) => m ()
-
+shell :: IO ()
 shell = welcome >> shellLoop
   where
     shellLoop = do
       cmd <- liftIO $ getLine
-      -- fm <- fmEx
       case cmd of
         "help"    -> help
         "load fm" -> load "fm"
@@ -57,16 +35,10 @@ shell = welcome >> shellLoop
 
 
 
-ftree = Node (Feature "iris" BasicFeature Mandatory) [
-        (Node (Feature "security" OrFeature Mandatory) []),
-        (Node (Feature "persist" AltFeature Mandatory) [])
-    ]
-
-
-fmEx :: FeatureModel
-fmEx = FeatureModel ftree []
-
-
+modifyFM :: (MonadState Env m) => m Env
+modifyFM = do
+  env <- get
+  return env
 
 
 readConfig :: (MonadReader env m, HasEnv env) => m String
@@ -87,6 +59,3 @@ newtype Hephaestus a = Hephaestus (ReaderT Env IO a)
     MonadReader Env,
     MonadIO
   )
-
-main :: Hephaestus ()
-main = undefined
