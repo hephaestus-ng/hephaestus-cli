@@ -11,13 +11,12 @@ help = do
   liftIO $ putStrLn "                                                         "
   liftIO $ putStrLn "hephaestus-shell currently offers the following commands:"
   liftIO $ putStrLn "                                                         "
-  liftIO $ putStrLn "$ load <type> <path-of-file>"
-  liftIO $ putStrLn "  where load types are "
-  liftIO $ putStrLn "    - feature model with file type .xml"
-  liftIO $ putStrLn "      - $ load fm file.xml "
+  liftIO $ putStrLn "$ load < fm | ck | asset >"
+  liftIO $ putStrLn "  - load a type to Environment "
   liftIO $ putStrLn "                                                         "
-  liftIO $ putStrLn "    - configuration knowledge with file type .ck "
-  liftIO $ putStrLn "      - $ load ck file.ck "
+  liftIO $ putStrLn "$ show env                                                   "
+  liftIO $ putStrLn "  - used to inspect Hephaestus Environment with loaded types "
+  liftIO $ putStrLn "                                                         "
   liftIO $ putStrLn "---------------------------------------------------------"
 
 

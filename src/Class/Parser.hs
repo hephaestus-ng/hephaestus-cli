@@ -1,4 +1,5 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE FlexibleInstances  #-}
 {-# LANGUAGE FlexibleContexts  #-}
 
@@ -7,16 +8,18 @@ module Class.Parser where
 import Text.Parsec
 import Text.Parsec.String
 
-import Control.Monad.Reader
+import Control.Monad.State
+import Control.Monad.Morph
 import Data.Either.Combinators
 
+import Types.Hephaestus
 import Parser.XML.Main
 import Parser.CK
 import Data.FM.Types
+import Data.SC.Asset
+import Data.SC.Types
 import Data.SPL
 
-
-type HephParser u a = ParsecT String u IO a
 
 
 class Monad m => MonadParser a m where
@@ -24,18 +27,19 @@ class Monad m => MonadParser a m where
   purify        :: (Either ParseError a) -> m a
 
 
-instance MonadParser FeatureModel IO where
+instance MonadParser FeatureModel Hephaestus where
   runHephParser path = do
-    result <- parseFromFile parseFeatureIDE path
-    return result
-  purify res = return (fromRight' res)
+    input <- liftIO $ readFile path
+    res <- generalize $ runParserT parseFeatureIDE () path input
+    return res
+  purify r = return $ fromRight' r
 
-instance (Asset a) => MonadParser (ConfigurationKnowledge a) IO where
+instance MonadParser (ConfigurationKnowledge ComponentModel) Hephaestus where
   runHephParser path = do
-    result <- parseFromFile parseCK path
-    return result
-  purify res = return (fromRight' res)
-
+    input <- liftIO $ readFile path
+    res <- generalize $ runParserT parseCK () path input
+    return res
+  purify r = return $ fromRight' r
 
 
 loadFM :: (MonadParser FeatureModel m) => String -> m FeatureModel
@@ -45,31 +49,8 @@ loadFM f = do
   return result
 
 
-loadCK :: (MonadParser (ConfigurationKnowledge TestAsset) m) => String -> m (ConfigurationKnowledge TestAsset)
+loadCK :: (MonadParser (ConfigurationKnowledge ComponentModel) m) => String -> m (ConfigurationKnowledge ComponentModel)
 loadCK f = do
   result <- runHephParser f
   result <- purify result
   return result
-
-
-
-
-
------------- Asset instance for testing CK parser
-
-ck :: ConfigurationKnowledge TestAsset
-ck = [(Ref "test", [])]
-
-data TestAsset = TestAsset { nameT :: String } deriving Show
-
-taParser :: Parsec String () (Transformation TestAsset)
-taParser = string "setMessage(\"" >> many1 letter >>= \s -> string "\")" >> return (setMessage s)
-
-setMessage :: String -> Transformation TestAsset
-setMessage s _ (Product p) = Product $ p { nameT = s }
-
-instance Asset TestAsset where
-  initialize = Product $ TestAsset { nameT = "begin" }
-  parserT    = taParser
-
-------------

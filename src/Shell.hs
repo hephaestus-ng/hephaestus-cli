@@ -1,61 +1,24 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE FlexibleContexts #-}
 
 module Shell where
 
-import Types.Error
+import Control.Monad.State
+
+import Types.Hephaestus
 import Types.State
 
-import Class.Parser
-
-import Action.Help
-import Action.Load
-
--- import Data.FM.Types
--- import Data.SPL
-
-import Control.Monad.Reader
-import Control.Monad.State
-import Control.Lens
+import Run
 
 
-
-shell :: IO ()
-shell = welcome >> shellLoop
-  where
-    shellLoop = do
-      cmd <- liftIO $ getLine
-      case cmd of
-        "help"    -> help
-        "load fm" -> load "fm"
-        "load ck" -> load "ck"
-      shellLoop
+runHephaestus :: Env -> Hephaestus a -> IO a
+runHephaestus v (Hephaestus m) = evalStateT m v
 
 
+run = runHephaestus initEnv shell
 
 
-modifyFM :: (MonadState Env m) => m Env
-modifyFM = do
-  env <- get
-  return env
+initEnv = Env Nothing Nothing
 
 
-readConfig :: (MonadReader env m, HasEnv env) => m String
-readConfig = do
-  cfg <- ask
-  return (view path $ view fm cfg)
-
-
-readHeph :: Hephaestus ()
-readHeph = do
-  cfg <- ask
-  liftIO $ print cfg
-
-
-newtype Hephaestus a = Hephaestus (ReaderT Env IO a)
-  deriving (
-    Functor, Applicative, Monad,
-    MonadReader Env,
-    MonadIO
-  )
+--
