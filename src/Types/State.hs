@@ -28,12 +28,11 @@ makeClassy ''Env
 
 
 instance Show Env where
-  show (Env (Just as) (Just fm)) =
-    show fm ++ "fm:" ++ show as ++ "as"
+  show (Env (Just as) (Just fm)) = "Env loaded with Feature Model:" ++ show fm ++ " Env Loaded with Asset" ++ show as ++ "as"
 
-  show (Env (Just as) Nothing) = "Environment loaded with asset: " ++ show as
+  show (Env (Just as) Nothing) = "Environment loaded with Asset: " ++ show as
 
-  show (Env Nothing (Just fm)) = "Environment loaded with asset: " ++ show fm
+  show (Env Nothing (Just fm)) = "Environment loaded with Feature Model: " ++ show fm
 
   show (Env Nothing Nothing) = show "Environment is not configured"
 

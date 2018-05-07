@@ -22,11 +22,11 @@ import Control.Lens
 
 
 
-shell :: (MonadState Env m,
-         MonadParser (ConfigurationKnowledge ComponentModel) m,
-         MonadParser FeatureModel m,
-         MonadIO m)
-         => m ()
+shell :: ( MonadState Env m,
+           MonadParser (ConfigurationKnowledge ComponentModel) m,
+           MonadParser FeatureModel m,
+           MonadIO m
+         ) => m ()
 shell = welcome >> shellLoop
   where
     shellLoop = do
@@ -34,9 +34,11 @@ shell = welcome >> shellLoop
       env <- get
       case cmd of
         "help"    -> help
+
         "load fm" -> load "fm"
         "load ck" -> load "ck"
+
         "show env" -> liftIO $ print env
 
-        "clear env" -> modify (\env -> env { _fm = Nothing, _asset = Nothing})
+        "clear env" -> modify (\env -> env { _fm = Nothing, _asset = Nothing })
       shellLoop

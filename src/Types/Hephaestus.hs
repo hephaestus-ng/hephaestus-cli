@@ -6,7 +6,7 @@ import Control.Monad.State
 
 import Types.State
 
-newtype Hephaestus a = Hephaestus (StateT Env IO a)
+newtype Hephaestus m = Hephaestus (StateT Env IO m)
   deriving (
     Functor, Applicative, Monad,
     MonadState Env,

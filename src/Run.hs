@@ -1,6 +1,3 @@
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FlexibleContexts #-}
-
 module Run where
 
 import Control.Monad.State
@@ -8,7 +5,7 @@ import Control.Monad.State
 import Types.Hephaestus
 import Types.State
 
-import Run
+import Shell
 
 
 runHephaestus :: Env -> Hephaestus a -> IO a

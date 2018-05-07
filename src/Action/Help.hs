@@ -17,6 +17,9 @@ help = do
   liftIO $ putStrLn "$ show env                                                   "
   liftIO $ putStrLn "  - used to inspect Hephaestus Environment with loaded types "
   liftIO $ putStrLn "                                                         "
+  liftIO $ putStrLn "$ derive product                                         "
+  liftIO $ putStrLn "  - used to inspect Hephaestus Environment with loaded types "
+  liftIO $ putStrLn "                                                         "
   liftIO $ putStrLn "---------------------------------------------------------"
 
 
