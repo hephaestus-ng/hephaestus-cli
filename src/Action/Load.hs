@@ -6,16 +6,11 @@ import Control.Monad.State
 
 import Types.State
 
-import Data.FM.Types
-import Data.SC.Types
-import Data.SPL
-
 import Class.Parser
 
 
 load :: ( MonadState Env m,
-          MonadParser FeatureModel m,
-          MonadParser (ConfigurationKnowledge ComponentModel) m,
+          MonadParser m,
           MonadIO m
         ) => String -> m ()
 

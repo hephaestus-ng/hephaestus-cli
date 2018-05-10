@@ -1,28 +1,26 @@
 module Class.FM where
 
-import Types.Hephaestus
-
+import Control.Lens
 import Control.Monad.State
+
+import Types.Hephaestus
 
 import Data.FM.Types
 import Data.FM.ProductConfiguration
 import Data.FM.Utils
 
 
-
-
 class (Monad m) => MonadFM m where
   validateP :: FeatureModel -> ProductConfiguration -> m Bool
-  pprint    :: FeatureTree -> m ()
+  pprint    :: FeatureModel -> m ()
   -- satSolve
-
 
 
 instance MonadFM Hephaestus where
 
   validateP fm pc = return $ isValid fm pc
 
-  pprint ft = liftIO $ pprintFeatureTree ft
+  pprint fm = liftIO $ pprintFeatureTree (view featureTree fm)
 
 
 

@@ -21,35 +21,35 @@ import Data.SPL
 
 
 
-class Monad m => MonadParser a m where
-  runHephParser :: String -> m (Either ParseError a)
+class Monad m => MonadParser m where
+  runFMParser   :: String -> m (Either ParseError FeatureModel)
+  runCKParser   :: String -> m (Either ParseError (ConfigurationKnowledge ComponentModel))
   purify        :: (Either ParseError a) -> m a
 
 
-instance MonadParser FeatureModel Hephaestus where
-  runHephParser path = do
+instance MonadParser Hephaestus where
+  runFMParser path = do
     input <- liftIO $ readFile path
     res <- generalize $ runParserT parseFeatureIDE () path input
     return res
-  purify r = return $ fromRight' r
 
-instance MonadParser (ConfigurationKnowledge ComponentModel) Hephaestus where
-  runHephParser path = do
+  runCKParser path = do
     input <- liftIO $ readFile path
     res <- generalize $ runParserT parseCK () path input
     return res
+
   purify r = return $ fromRight' r
 
 
-loadFM :: (MonadParser FeatureModel m) => String -> m FeatureModel
+loadFM :: (MonadParser m) => String -> m FeatureModel
 loadFM f = do
-  result <- runHephParser f
+  result <- runFMParser f
   result <- purify result
   return result
 
 
-loadCK :: (MonadParser (ConfigurationKnowledge ComponentModel) m) => String -> m (ConfigurationKnowledge ComponentModel)
+loadCK :: (MonadParser m) => String -> m (ConfigurationKnowledge ComponentModel)
 loadCK f = do
-  result <- runHephParser f
+  result <- runCKParser f
   result <- purify result
   return result

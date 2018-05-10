@@ -26,8 +26,7 @@ import Control.Lens
 
 shell :: ( MonadState Env m,
            MonadFM m,
-           MonadParser (ConfigurationKnowledge ComponentModel) m,
-           MonadParser FeatureModel m,
+           MonadParser m,
            MonadIO m
          ) => m ()
 shell = welcome >> shellLoop

@@ -9,10 +9,6 @@ import Types.State
 
 import Class.FM
 
-import Data.FM.Types
-import Data.FM.ProductConfiguration
-import Data.FM.Utils
-
 import Data.List.Split
 
 
@@ -27,7 +23,7 @@ validate = do
 
     (Just f) -> do
       liftIO $ putStrLn ""
-      pprint (view featureTree f)
+      pprint f
       liftIO $ putStrLn ""
       liftIO $ putStrLn "select the products you wish to validate, separated by commas. i.e: iris,security,sql,persistence,etc"
       prod <- liftIO $ getLine
