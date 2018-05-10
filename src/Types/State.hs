@@ -9,14 +9,8 @@ import Data.SC.Types
 import Data.SC.Asset
 import Data.SPL
 import Data.Tree
+import Data.Tree.Lens
 
-
-data FM =
-  FM {
-    _path     :: String,
-    _parsedFM :: FeatureModel
-  } deriving (Show)
-makeClassy ''FM
 
 data Env =
   Env {
@@ -27,17 +21,25 @@ data Env =
 makeClassy ''Env
 
 
+-- instance Show (ConfigurationKnowledge ComponentModel) where
+--   show ck = show "ck"
+
+
 instance Show Env where
-  show (Env (Just as) (Just fm)) = "Env loaded with Feature Model:" ++ show fm ++ " Env Loaded with Asset" ++ show as ++ "as"
+  show (Env (Just as) (Just fm))
+    = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
+      "\nEnv loaded with Asset: " ++ show as
+      -- "Env loaded with Configuration Knowledge: " ++ show ck
 
-  show (Env (Just as) Nothing) = "Environment loaded with Asset: " ++ show as
+  show (Env (Just as) Nothing)
+    = "Env loaded with Asset: " ++ show as ++
+      "\nEnv not loaded with Feature Model \n" ++
+      "Env not loaded with Configuration Knowledge \n"
 
-  show (Env Nothing (Just fm)) = "Environment loaded with Feature Model: " ++ show fm
+  show (Env Nothing (Just fm))
+    = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
+      "\nEnv not loaded with Asset \n" ++
+      "Env not loaded with Configuration Knowledge \n"
 
-  show (Env Nothing Nothing) = show "Environment is not configured"
-
-
-
-fmcfg    = FM "fm-path" (FeatureModel (Node (Feature "iris" BasicFeature Mandatory) []) [])
-
-envv     = Env Nothing Nothing
+  show (Env Nothing Nothing)
+    = show "Environment is not configured"

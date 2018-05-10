@@ -31,13 +31,10 @@ validate = do
       liftIO $ putStrLn ""
       liftIO $ putStrLn "select the products you wish to validate, separated by commas. i.e: iris,security,sql,persistence,etc"
       prod <- liftIO $ getLine
-      liftIO $ print $ splitOn "," prod
-      b <- validateP f (prod :: ProductConfiguration)
+      b <- validateP f (splitOn "," prod)
       if b then
         liftIO $ putStrLn "valid product"
       else
         liftIO $ putStrLn "invalid product"
-
-      liftIO $ print (view featureTree f)
 
   liftIO $ putStrLn ""
