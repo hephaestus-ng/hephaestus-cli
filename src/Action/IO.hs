@@ -1,4 +1,4 @@
-module Action.Help where
+module Action.IO where
 
 import Control.Monad.IO.Class
 
@@ -17,8 +17,8 @@ help = do
   liftIO $ putStrLn "$ show env                                                   "
   liftIO $ putStrLn "  - used to inspect Hephaestus Environment with loaded types "
   liftIO $ putStrLn "                                                         "
-  liftIO $ putStrLn "$ derive product                                         "
-  liftIO $ putStrLn "  - used to inspect Hephaestus Environment with loaded types "
+  liftIO $ putStrLn "$ validate product                                         "
+  liftIO $ putStrLn "  - used to validate a product derivation from loaded Feature Model "
   liftIO $ putStrLn "                                                         "
   liftIO $ putStrLn "---------------------------------------------------------"
 
@@ -31,11 +31,11 @@ welcome = do
   liftIO $ putStrLn "---------- Hephaestus - Shell ---------"
   liftIO $ putStrLn ""
   liftIO $ putStrLn ""
-  liftIO $ putStrLn "-- type 'help' to see available commands"
+  liftIO $ putStrLn "   type 'help' to see available commands"
   liftIO $ putStrLn ""
-  liftIO $ putStrLn "-- loading your SPL:"
+  liftIO $ putStrLn "   loading your SPL:"
   liftIO $ putStrLn ""
-  liftIO $ putStrLn "-- 1- load fm <fm-path>"
-  liftIO $ putStrLn "-- 2- load ck <ck-path>"
-  liftIO $ putStrLn "-- 3- load asset ??"
+  liftIO $ putStrLn "   1- load fm "
+  liftIO $ putStrLn "   2- load ck "
+  liftIO $ putStrLn "   3- load asset ??"
   liftIO $ putStrLn ""

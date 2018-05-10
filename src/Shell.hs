@@ -7,9 +7,11 @@ import Types.Error
 import Types.State
 
 import Class.Parser
+import Class.FM
 
-import Action.Help
+import Action.IO
 import Action.Load
+import Action.Validate
 
 import Types.Hephaestus
 
@@ -23,6 +25,7 @@ import Control.Lens
 
 
 shell :: ( MonadState Env m,
+           MonadFM m,
            MonadParser (ConfigurationKnowledge ComponentModel) m,
            MonadParser FeatureModel m,
            MonadIO m
@@ -33,12 +36,20 @@ shell = welcome >> shellLoop
       cmd <- liftIO $ getLine
       env <- get
       case cmd of
-        "help"    -> help
+        "help"             -> help
 
-        "load fm" -> load "fm"
-        "load ck" -> load "ck"
+        "load fm"          -> load "fm"
+        "load ck"          -> load "ck"
 
-        "show env" -> liftIO $ print env
 
-        "clear env" -> modify (\env -> env { _fm = Nothing, _asset = Nothing })
+        "validate product" -> validate
+
+        "show env"         -> liftIO $ print env
+        "clear env"        -> clearEnv
       shellLoop
+
+
+
+
+clearEnv :: (MonadState Env m) => m ()
+clearEnv = modify (\env -> env { _fm = Nothing, _asset = Nothing })
