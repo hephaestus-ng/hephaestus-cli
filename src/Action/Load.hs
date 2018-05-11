@@ -8,6 +8,7 @@ import Types.State
 
 import Class.Parser
 
+import Data.List.Split
 
 load :: ( MonadState Env m,
           MonadParser m,
@@ -34,3 +35,32 @@ load "ck" = do
   path <- liftIO $ getLine
   res <- loadCK path
   liftIO $ putStrLn "ck loaded"
+
+load "pc" = do
+  liftIO $ putStrLn ("  ")
+  liftIO $ putStrLn ("  loading product configuration to hephaestus environment")
+  liftIO $ putStrLn ("  list of features:")
+  liftIO $ putStrLn ""
+  path <- liftIO $ getLine
+  modify (\env -> env { _pc = Just (splitOn "," path) })
+  liftIO $ putStrLn "ck loaded"
+
+load "src" = do
+  liftIO $ putStrLn ("  ")
+  liftIO $ putStrLn ("  loading input source dir to hephaestus environment")
+  liftIO $ putStrLn ("  src path:")
+  liftIO $ putStrLn ""
+  path <- liftIO $ getLine
+  modify (\env -> env { _src = Just path })
+  liftIO $ putStrLn "src loaded"
+         
+load "target" = do
+  liftIO $ putStrLn ("  ")
+  liftIO $ putStrLn ("  loading output dir to hephaestus environment")
+  liftIO $ putStrLn ("  output path:")
+  liftIO $ putStrLn ""
+  path <- liftIO $ getLine
+  modify (\env -> env { _target = Just path })
+  liftIO $ putStrLn "target loaded"
+
+

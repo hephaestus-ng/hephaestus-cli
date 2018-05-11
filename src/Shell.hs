@@ -6,12 +6,14 @@ module Shell where
 import Types.Error
 import Types.State
 
+import Class.Builder
 import Class.Parser
 import Class.FM
 
 import Action.IO
 import Action.Load
 import Action.Validate
+import Action.Build
 
 import Types.Hephaestus
 
@@ -23,10 +25,10 @@ import Control.Monad.State
 import Control.Lens
 
 
-
 shell :: ( MonadState Env m,
            MonadFM m,
            MonadParser m,
+           MonadBuilder m, 
            MonadIO m
          ) => m ()
 shell = welcome >> shellLoop
@@ -39,6 +41,10 @@ shell = welcome >> shellLoop
 
         "load fm"          -> load "fm"
         "load ck"          -> load "ck"
+        "load pc"          -> load "pc"
+        "load src"         -> load "src"
+        "load target"      -> load "target"
+        "build"            -> buildProduct
 
 
         "validate product" -> validate

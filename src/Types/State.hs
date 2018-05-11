@@ -14,9 +14,12 @@ import Data.Tree.Lens
 
 data Env =
   Env {
-    _asset :: Maybe String,
-    _fm    :: Maybe FeatureModel
-    -- _ck    :: Maybe (ConfigurationKnowledge ComponentModel)
+    _asset  :: Maybe String,
+    _fm     :: Maybe FeatureModel,
+    _ck     :: Maybe (ConfigurationKnowledge ComponentModel),
+    _pc     :: Maybe ProductConfiguration,
+    _src    :: Maybe String,
+    _target :: Maybe String 
   }
 makeClassy ''Env
 
@@ -26,20 +29,20 @@ makeClassy ''Env
 
 
 instance Show Env where
-  show (Env (Just as) (Just fm))
+  show (Env (Just as) (Just fm) _ _ _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
       "\nEnv loaded with Asset: " ++ show as
       -- "Env loaded with Configuration Knowledge: " ++ show ck
 
-  show (Env (Just as) Nothing)
+  show (Env (Just as) Nothing _ _ _ _)
     = "Env loaded with Asset: " ++ show as ++
       "\nEnv not loaded with Feature Model \n" ++
       "Env not loaded with Configuration Knowledge \n"
 
-  show (Env Nothing (Just fm))
+  show (Env Nothing (Just fm) _ _ _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
       "\nEnv not loaded with Asset \n" ++
       "Env not loaded with Configuration Knowledge \n"
 
-  show (Env Nothing Nothing)
+  show (Env Nothing Nothing _ _ _ _)
     = show "Environment is not configured"
