@@ -5,9 +5,7 @@ import Control.Monad.State
 
 import Types.Hephaestus
 
-import Data.FM.Types
-import Data.FM.ProductConfiguration
-import Data.FM.Utils
+import Data.FM
 
 
 class (Monad m) => MonadFM m where

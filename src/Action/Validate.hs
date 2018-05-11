@@ -4,12 +4,12 @@ module Action.Validate where
 
 import Control.Lens
 import Control.Monad.State
+import Data.List.Split
 
 import Types.State
 
 import Class.FM
 
-import Data.List.Split
 
 
 validate :: (MonadState Env m, MonadFM m, MonadIO m) => m ()
@@ -19,6 +19,7 @@ validate = do
   fm <- gets (view fm)
 
   case fm of
+
     Nothing  -> liftIO $ putStrLn "please load a Feature Model to validate a derived product"
 
     (Just f) -> do
