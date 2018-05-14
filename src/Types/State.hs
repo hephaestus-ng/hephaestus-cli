@@ -19,7 +19,7 @@ data Env =
     _ck     :: Maybe (ConfigurationKnowledge ComponentModel),
     _pc     :: Maybe ProductConfiguration,
     _src    :: Maybe String,
-    _target :: Maybe String 
+    _target :: Maybe String
   }
 makeClassy ''Env
 
@@ -29,9 +29,11 @@ makeClassy ''Env
 
 
 instance Show Env where
-  show (Env (Just as) (Just fm) _ _ _ _)
+  show (Env (Just as) (Just fm) _ (Just pc) _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
-      "\nEnv loaded with Asset: " ++ show as
+      "\nEnv loaded with Asset: " ++ show as ++
+      "\nEnv loaded with Product Configuration: " ++ show pc
+
       -- "Env loaded with Configuration Knowledge: " ++ show ck
 
   show (Env (Just as) Nothing _ _ _ _)
@@ -39,10 +41,11 @@ instance Show Env where
       "\nEnv not loaded with Feature Model \n" ++
       "Env not loaded with Configuration Knowledge \n"
 
-  show (Env Nothing (Just fm) _ _ _ _)
+  show (Env Nothing (Just fm) (Just ck) (Just pc) _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
-      "\nEnv not loaded with Asset \n" ++
-      "Env not loaded with Configuration Knowledge \n"
+      "\nEnv loaded with Product Configuration: " ++ show pc ++
+      "\nEnv  loaded with Configuration Knowledge " ++
+      "\nEnv not loaded with Asset \n"
 
   show (Env Nothing Nothing _ _ _ _)
     = show "Environment is not configured"

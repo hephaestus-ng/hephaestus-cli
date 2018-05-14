@@ -28,7 +28,7 @@ import Control.Lens
 shell :: ( MonadState Env m,
            MonadFM m,
            MonadParser m,
-           MonadBuilder m, 
+           MonadBuilder m,
            MonadIO m
          ) => m ()
 shell = welcome >> shellLoop
@@ -44,8 +44,8 @@ shell = welcome >> shellLoop
         "load pc"          -> load "pc"
         "load src"         -> load "src"
         "load target"      -> load "target"
+        
         "build"            -> buildProduct
-
 
         "validate product" -> validate
 

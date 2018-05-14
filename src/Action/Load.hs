@@ -3,15 +3,18 @@
 module Action.Load where
 
 import Control.Monad.State
+import Control.Lens
 
 import Types.State
 
 import Class.Parser
+import Class.FM
 
 import Data.List.Split
 
 load :: ( MonadState Env m,
           MonadParser m,
+          MonadFM m,
           MonadIO m
         ) => String -> m ()
 
@@ -24,43 +27,53 @@ load "fm" = do
   res <- loadFM path
   modify (\env -> env { _fm = Just res })
   liftIO $ putStrLn ""
-  liftIO $ putStrLn "Feature Model was loaded to environment"
+  liftIO $ putStrLn "  Feature Model was loaded to environment"
   liftIO $ putStrLn ""
 
 load "ck" = do
-  liftIO $ putStrLn ("  ")
-  liftIO $ putStrLn ("  loading configuration knowledge to hephaestus environment")
-  liftIO $ putStrLn ("  product.ck path:")
+  liftIO $ putStrLn "  "
+  liftIO $ putStrLn "  loading configuration knowledge to hephaestus environment"
+  liftIO $ putStrLn "  product.ck path:"
   liftIO $ putStrLn ""
   path <- liftIO $ getLine
   res <- loadCK path
-  liftIO $ putStrLn "ck loaded"
+  modify (\env -> env { _ck = Just res})
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "  Configuration Knowledge was loaded to environment"
+  liftIO $ putStrLn ""
 
 load "pc" = do
-  liftIO $ putStrLn ("  ")
-  liftIO $ putStrLn ("  loading product configuration to hephaestus environment")
-  liftIO $ putStrLn ("  list of features:")
-  liftIO $ putStrLn ""
-  path <- liftIO $ getLine
-  modify (\env -> env { _pc = Just (splitOn "," path) })
-  liftIO $ putStrLn "ck loaded"
+  fm <- gets (view fm)
+  case fm of
+    Nothing -> liftIO $ putStrLn "  please load a Feature Model to derive a product"
+    Just f -> do
+      liftIO $ putStrLn ""
+      pprint f
+      liftIO $ putStrLn ""
+      liftIO $ putStrLn "  select the features that will be included in your product, separated by commas. i.e: iris,security,sql,persistence,etc"
+      prod <- liftIO $ getLine
+      b <- validateP f (splitOn "," prod)
+      if b then do
+        liftIO $ putStrLn "  valid product, loaded to environment"
+        modify (\env -> env { _pc = Just (splitOn "," prod) })
+      else
+        liftIO $ putStrLn "  invalid product, please choose a valid feature selection to load product configuration to environment"
+
 
 load "src" = do
-  liftIO $ putStrLn ("  ")
-  liftIO $ putStrLn ("  loading input source dir to hephaestus environment")
-  liftIO $ putStrLn ("  src path:")
+  liftIO $ putStrLn "  "
+  liftIO $ putStrLn "  loading input source dir to hephaestus environment"
+  liftIO $ putStrLn "  src path:"
   liftIO $ putStrLn ""
   path <- liftIO $ getLine
   modify (\env -> env { _src = Just path })
   liftIO $ putStrLn "src loaded"
-         
+
 load "target" = do
-  liftIO $ putStrLn ("  ")
-  liftIO $ putStrLn ("  loading output dir to hephaestus environment")
-  liftIO $ putStrLn ("  output path:")
+  liftIO $ putStrLn "  "
+  liftIO $ putStrLn "  loading output dir to hephaestus environment"
+  liftIO $ putStrLn "  output path:"
   liftIO $ putStrLn ""
   path <- liftIO $ getLine
   modify (\env -> env { _target = Just path })
   liftIO $ putStrLn "target loaded"
-
-

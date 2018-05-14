@@ -12,14 +12,15 @@ import Data.SC
 import Types.Hephaestus
 import Types.State
 
+
 class Monad m => MonadBuilder m where
   buildM :: FeatureModel ->
             ConfigurationKnowledge ComponentModel ->
             ProductConfiguration ->
             m (Product ComponentModel)
 
+
 instance MonadBuilder Hephaestus where
   buildM fm ck pc = do
-    let spl = SPL fm ck 
-    return $ build spl pc  
-
+    let spl = SPL fm ck
+    return $ build spl pc
