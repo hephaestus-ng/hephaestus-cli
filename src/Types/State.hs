@@ -5,8 +5,7 @@ module Types.State where
 import Control.Lens
 
 import Data.FM.Types
-import Data.SC.Types
-import Data.SC.Asset
+import Data.Assets
 import Data.SPL
 import Data.Tree
 import Data.Tree.Lens
@@ -18,6 +17,7 @@ data Env =
     _fm     :: Maybe FeatureModel,
     _ck     :: Maybe (ConfigurationKnowledge ComponentModel),
     _pc     :: Maybe ProductConfiguration,
+    _prdct  :: Maybe (Product ComponentModel),
     _src    :: Maybe String,
     _target :: Maybe String
   }
@@ -29,23 +29,22 @@ makeClassy ''Env
 
 
 instance Show Env where
-  show (Env (Just as) (Just fm) _ (Just pc) _ _)
+  show (Env (Just as) (Just fm) _ (Just pc) _ _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
       "\nEnv loaded with Asset: " ++ show as ++
       "\nEnv loaded with Product Configuration: " ++ show pc
 
       -- "Env loaded with Configuration Knowledge: " ++ show ck
 
-  show (Env (Just as) Nothing _ _ _ _)
+  show (Env (Just as) Nothing _ _ _ _ _)
     = "Env loaded with Asset: " ++ show as ++
       "\nEnv not loaded with Feature Model \n" ++
       "Env not loaded with Configuration Knowledge \n"
 
-  show (Env Nothing (Just fm) (Just ck) (Just pc) _ _)
+  show (Env _ (Just fm) (Just ck) (Just pc) _ _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
       "\nEnv loaded with Product Configuration: " ++ show pc ++
-      "\nEnv  loaded with Configuration Knowledge " ++
-      "\nEnv not loaded with Asset \n"
+      "\nEnv  loaded with Configuration Knowledge "
 
-  show (Env Nothing Nothing _ _ _ _)
+  show (Env Nothing Nothing _ _ _ _ _)
     = show "Environment is not configured"

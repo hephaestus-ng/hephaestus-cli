@@ -15,15 +15,14 @@ import Types.Hephaestus
 import Parser.XML.Main
 import Parser.CK
 import Data.FM.Types
-import Data.SC.Asset
-import Data.SC.Types
+import Data.Assets
 import Data.SPL
 
 
 
 class Monad m => MonadParser m where
   runFMParser   :: String -> m (Either ParseError FeatureModel)
-  runCKParser   :: String -> m (Either ParseError (ConfigurationKnowledge ComponentModel))
+  runCKParser   :: (Asset a) => String -> m (Either ParseError (ConfigurationKnowledge a))
   purify        :: (Either ParseError a) -> m a
 
 
@@ -38,7 +37,9 @@ instance MonadParser Hephaestus where
     res <- generalize $ runParserT parseCK () path input
     return res
 
-  purify r = return $ fromRight' r
+  purify r = case r of
+    Right rs -> return rs
+    Left err -> error $ show $ err
 
 
 loadFM :: (MonadParser m) => String -> m FeatureModel

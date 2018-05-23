@@ -17,10 +17,6 @@ import Action.Build
 
 import Types.Hephaestus
 
-import Data.FM.Types
-import Data.SC.Types
-import Data.SPL
-
 import Control.Monad.State
 import Control.Lens
 
@@ -44,7 +40,7 @@ shell = welcome >> shellLoop
         "load pc"          -> load "pc"
         "load src"         -> load "src"
         "load target"      -> load "target"
-        
+
         "build"            -> buildProduct
 
         "validate product" -> validate
