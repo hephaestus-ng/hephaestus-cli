@@ -9,5 +9,5 @@ extra-deps:
   commit: HEAD
 - git: https://github.com/hephaestus-ng/hephaestus-spl.git
   commit: HEAD
-- git: https://github.com/hephaestus-ng/hephaestus-sc.git
+- git: https://github.com/hephaestus-ng/hephaestus-assets.git
   commit: HEAD

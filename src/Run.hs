@@ -15,7 +15,7 @@ runHephaestus v (Hephaestus m) = evalStateT m v
 run = runHephaestus initEnv shell
 
 
-initEnv = Env Nothing Nothing Nothing Nothing Nothing Nothing Nothing
+initEnv = Env Nothing Nothing Nothing Nothing Nothing (Just "/home/") (Just "/home/product")
 
 
 --

@@ -9,7 +9,6 @@ import Text.Parsec.String
 
 import Control.Monad.State
 import Control.Monad.Morph
-import Data.Either.Combinators
 
 import Types.Hephaestus
 import Parser.XML.Main

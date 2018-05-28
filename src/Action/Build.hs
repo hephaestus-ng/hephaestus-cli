@@ -24,4 +24,5 @@ buildProduct = do
   ck <- fmap fromJust $ gets (view ck)
   pc <- fmap fromJust $ gets (view pc)
   prod <- buildM fm ck pc
+  modify (\env -> env { _prdct = Just prod })
   liftIO $ print $ show prod

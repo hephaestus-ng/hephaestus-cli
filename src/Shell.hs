@@ -14,6 +14,7 @@ import Action.IO
 import Action.Load
 import Action.Validate
 import Action.Build
+import Action.Export
 
 import Types.Hephaestus
 
@@ -42,13 +43,19 @@ shell = welcome >> shellLoop
         "load target"      -> load "target"
 
         "build"            -> buildProduct
+        "export"           -> exportProduct
 
         "validate product" -> validate
 
         "show env"         -> liftIO $ print env
         "clear env"        -> clearEnv
-      shellLoop
 
+        otherwise          -> do
+          liftIO $ putStrLn ""
+          liftIO $ putStrLn "please insert a valid command"
+          liftIO $ putStrLn ""
+
+      shellLoop
 
 
 

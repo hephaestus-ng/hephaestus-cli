@@ -1,6 +1,6 @@
 module Main where
 
-import Cli
+import Run
 
 main :: IO ()
-main = someFunc
+main = run

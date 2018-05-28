@@ -23,7 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - hephaestus-fm
 - hephaestus-spl
-- hephaestus-sc
+- hephaestus-assets
 - lens
 - containers
 
@@ -42,7 +42,7 @@ executables:
     - hephaestus-shell
     - hephaestus-fm
     - hephaestus-spl
-    - hephaestus-sc
+    - hephaestus-assets
     - lens
     - containers
 
@@ -58,6 +58,6 @@ tests:
     - hephaestus-shell
     - hephaestus-fm
     - hephaestus-spl
-    - hephaestus-sc
+    - hephaestus-assets
     - lens
     - containers

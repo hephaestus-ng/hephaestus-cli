@@ -1,14 +1,23 @@
+{-# LANGUAGE FlexibleContexts  #-}
+
 module Action.Export where
 
+import Data.Maybe
 import Control.Lens
 import Control.Monad.State
 
 import Class.Builder
 
+import Types.State
 
-exportProduct :: (MonadBuilder m) => m ()
+
+exportProduct :: (MonadState Env m, MonadBuilder m, MonadIO m) => m ()
 exportProduct = do
-  src  <- gets (view src)
-  trg  <- gets (view trg)
-  prod <- gets (view prdct)
+  src  <- fmap fromJust $ gets (view src)
+  trg  <- fmap fromJust $ gets (view target)
+  prod <- fmap fromJust $ gets (view prdct)
   exportM src trg prod
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "builded product was exported with success"
+  liftIO $ putStrLn ""
+  

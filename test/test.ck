@@ -1,2 +1,2 @@
-haskell template => [setMessage("HelloWorldHaskell"), setMessage("test")]
+haskell => [setMessage("HelloWorldHaskell"), setMessage("test")]
 python  => [setMessage("HelloWorldPython")]

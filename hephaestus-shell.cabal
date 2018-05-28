@@ -1,9 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.20.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
-
--- hash: 84e581f837a2759ad143aec36ec8bf895d0e9fb7f2aa055bac31b3f802fafaa4
+-- hash: e7aa39fdf86bbc86604bb5063225e2881742f129644ad2074a1f32b8955aafee
 
 name:           hephaestus-shell
 version:        0.1.0.0
@@ -17,7 +16,6 @@ license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
-
 extra-source-files:
     ChangeLog.md
     README.md
@@ -27,52 +25,65 @@ source-repository head
   location: https://github.com/hephaestus-ng/hephaestus-shell
 
 library
+  exposed-modules:
+      Action.Build
+      Action.Export
+      Action.IO
+      Action.Load
+      Action.Validate
+      Class.Builder
+      Class.FM
+      Class.Logger
+      Class.Parser
+      Run
+      Shell
+      Types.Error
+      Types.Hephaestus
+      Types.State
+  other-modules:
+      Paths_hephaestus_shell
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
     , containers
+    , hephaestus-assets
     , hephaestus-fm
-    , hephaestus-sc
     , hephaestus-spl
     , lens
-  exposed-modules:
-      shell
-  other-modules:
-      Paths_hephaestus_shell
   default-language: Haskell2010
 
 executable hephaestus-shell-exe
   main-is: Main.hs
+  other-modules:
+      Paths_hephaestus_shell
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
-    , hephaestus-shell
+    , hephaestus-assets
     , hephaestus-fm
-    , hephaestus-sc
+    , hephaestus-shell
     , hephaestus-spl
     , lens
-  other-modules:
-      Paths_hephaestus_shell
   default-language: Haskell2010
 
 test-suite hephaestus-shell-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
+  other-modules:
+      Paths_hephaestus_shell
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , containers
-    , hephaestus-shell
+    , hephaestus-assets
     , hephaestus-fm
-    , hephaestus-sc
+    , hephaestus-shell
     , hephaestus-spl
     , lens
-  other-modules:
-      Paths_hephaestus_shell
   default-language: Haskell2010
