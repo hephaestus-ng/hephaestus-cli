@@ -2,15 +2,6 @@
 	<featureModel chosenLayoutAlgorithm="1">
 		<struct>
       <and mandatory="true" name="iris">
-  			<or mandatory="true" name="expressionProblem">
-          <feature mandatory="true" name="sendMessage"/>
-          <feature mandatory="true" name="receiveMessage"/>
-  			</or>
-        <feature mandatory="false" name="addressBook"/>
-				<alt name="search">
-					<feature mandatory="true" name="simpleSearch"/>
-					<feature mandatory="true" name="advancedSearch"/>
-				</alt>
         <alt mandatory="true" name="persistence">
           <feature mandatory="true" name="relational"/>
           <feature mandatory="true" name="nonRelational"/>

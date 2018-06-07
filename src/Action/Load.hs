@@ -51,14 +51,18 @@ load "pc" = do
       pprint f
       liftIO $ putStrLn ""
       liftIO $ putStrLn "  select the features that will be included in your product, separated by commas. i.e: iris,security,sql,persistence,etc"
+      liftIO $ putStrLn "  "
       prod <- liftIO $ getLine
       b <- validateP f (splitOn "," prod)
       if b then do
+        liftIO $ putStrLn ""
         liftIO $ putStrLn "  valid product, loaded to environment"
+        liftIO $ putStrLn ""
         modify (\env -> env { _pc = Just (splitOn "," prod) })
-      else
+      else do
+        liftIO $ putStrLn ""
         liftIO $ putStrLn "  invalid product, please choose a valid feature selection to load product configuration to environment"
-
+        liftIO $ putStrLn ""
 
 load "src" = do
   liftIO $ putStrLn "  "

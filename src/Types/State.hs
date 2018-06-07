@@ -17,11 +17,11 @@ data Env =
 
     -- SPL configs
     _fm     :: Maybe FeatureModel,
-    _ck     :: Maybe (ConfigurationKnowledge ComponentModel),
+    _ck     :: Maybe (ConfigurationKnowledge HwAsset),
     _pc     :: Maybe ProductConfiguration,
 
     -- Build configs
-    _prdct  :: Maybe (Product ComponentModel),
+    _prdct  :: Maybe (Product HwAsset),
     _src    :: Maybe String,
     _target :: Maybe String
   }

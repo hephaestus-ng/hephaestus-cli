@@ -48,7 +48,7 @@ loadFM f = do
   return result
 
 
-loadCK :: (MonadParser m) => String -> m (ConfigurationKnowledge ComponentModel)
+loadCK :: (Asset a, MonadParser m) => String -> m (ConfigurationKnowledge a)
 loadCK f = do
   result <- runCKParser f
   result <- purify result
