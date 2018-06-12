@@ -8,7 +8,7 @@ We manage our dependencies through Stack.
 
 ## Building with Stack
 
-PLain and simple, build with stack on cloned dir.
+Plain and simple (cheers to stack's team), build with `stack build` on cloned dir.
 
 This will download all dependencies and install our shell executable on stack-work environment.
 
