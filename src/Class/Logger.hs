@@ -1,5 +1,6 @@
 module Class.Logger where
 
+import Types.Hephaestus
 
 
 class Monad m => MonadLog m where

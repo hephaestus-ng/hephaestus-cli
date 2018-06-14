@@ -25,7 +25,10 @@ dependencies:
 - hephaestus-spl
 - hephaestus-assets
 - lens
+- mmorph
 - containers
+- mtl
+- parsec
 
 library:
   source-dirs: src
