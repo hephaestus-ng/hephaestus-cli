@@ -13,20 +13,19 @@ import Data.Tree.Lens
 
 data Env =
   Env {
-    _asset  :: Maybe String,
+    _asset   :: Maybe String,
 
     -- SPL configs
-    _fm     :: Maybe FeatureModel,
-    _ck     :: Maybe (ConfigurationKnowledge HwAsset),
-    _pc     :: Maybe ProductConfiguration,
+    _fm      :: Maybe FeatureModel,
+    _ck      :: Maybe (ConfigurationKnowledge ComponentModel),
+    _pc      :: Maybe ProductConfiguration,
 
     -- Build configs
-    _prdct  :: Maybe (Product HwAsset),
-    _src    :: Maybe String,
-    _target :: Maybe String
+    _prdct   :: Maybe (Product ComponentModel),
+    _src     :: Maybe String,
+    _target  :: Maybe String
   }
 makeClassy ''Env
-
 
 
 instance Show Env where
@@ -43,6 +42,10 @@ instance Show Env where
   show (Env _ (Just fm) (Just ck) (Just pc) _ _ _)
     = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
       "\nEnv loaded with Product Configuration: " ++ show pc ++
+      "\nEnv  loaded with Configuration Knowledge "
+
+  show (Env _ (Just fm) (Just ck) _ _ _ _)
+    = "Env loaded with Feature Model: " ++ show (view name $ view root $ view featureTree fm) ++
       "\nEnv  loaded with Configuration Knowledge "
 
   show (Env Nothing Nothing _ _ _ _ _)

@@ -4,6 +4,7 @@ module Action.Export where
 
 import Data.Maybe
 import Control.Lens
+import Control.Monad
 import Control.Monad.State
 
 import Class.Builder
@@ -20,4 +21,18 @@ exportProduct = do
   liftIO $ putStrLn ""
   liftIO $ putStrLn "builded product was exported with success"
   liftIO $ putStrLn ""
-  
+
+
+-- setPath :: (MonadState Env m, MonadIO m) => Int -> m ()
+-- setPath 0 = do
+--   liftIO $ putStrLn ""
+--   liftIO $ putStrLn "specify a source code path"
+--   liftIO $ putStrLn ""
+--   src <- liftIO $ getLine
+--   modify (\env -> env { _src = Just src })
+-- setPath 1 = do
+--   liftIO $ putStrLn ""
+--   liftIO $ putStrLn "specify a target code path"
+--   liftIO $ putStrLn ""
+--   target <- liftIO $ getLine
+--   modify (\env -> env { _target = Just target })

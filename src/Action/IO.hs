@@ -19,6 +19,9 @@ help = do
   liftIO $ putStrLn "$ build                                        "
   liftIO $ putStrLn "  - builds a product when environment has fm, ck and pc loaded "
   liftIO $ putStrLn "                                                         "
+  liftIO $ putStrLn "$ export                                        "
+  liftIO $ putStrLn "  - exports a product when environment has a built product loaded"
+  liftIO $ putStrLn "                                                         "
   liftIO $ putStrLn "---------------------------------------------------------"
   liftIO $ putStrLn "                                                         "
 
