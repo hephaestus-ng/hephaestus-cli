@@ -22,6 +22,7 @@ import Data.SPL
 class Monad m => MonadParser m where
   runFMParser   :: String -> m (Either ParseError FeatureModel)
   runCKParser   :: (Asset a) => String -> m (Either ParseError (ConfigurationKnowledge a))
+  runABParser   :: (Asset a) => String -> m (Either ParseError a)
   purify        :: (Either ParseError a) -> m a
 
 
@@ -34,6 +35,11 @@ instance MonadParser Hephaestus where
   runCKParser path = do
     input <- liftIO $ readFile path
     res <- generalize $ runParserT parseCK () path input
+    return res
+
+  runABParser path = do
+    input <- liftIO $ readFile path
+    res <- generalize $ runParserT parserA () path input
     return res
 
   purify r = case r of
@@ -51,5 +57,11 @@ loadFM f = do
 loadCK :: (Asset a, MonadParser m) => String -> m (ConfigurationKnowledge a)
 loadCK f = do
   result <- runCKParser f
+  result <- purify result
+  return result
+
+loadAB :: (Asset a, MonadParser m) => String -> m a
+loadAB f = do
+  result <- runABParser f
   result <- purify result
   return result

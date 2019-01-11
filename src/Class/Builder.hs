@@ -27,13 +27,14 @@ class Monad m => MonadBuilder m where
   exportM :: (Asset a) =>
               Source ->
               Target ->
+              a ->
               Product a ->
               m ()
 
 
 instance MonadBuilder Hephaestus where
-  buildM fm ck pc assetBase = do
-    let spl = SPL fm ck assetBase
+  buildM fm ck pc ab = do
+    let spl = SPL fm ck ab
     return $ build spl pc
 
-  exportM src trg prod = liftIO $ export src trg prod
+  exportM src trg ab prod = liftIO $ export src trg ab prod

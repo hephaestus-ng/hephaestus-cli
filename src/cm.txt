@@ -1,0 +1,4 @@
+searchComponent => [/src/SearchComponent.java, /src/SearchTemplate.css]
+persistenceComponent => [/src/Persistence/Template.java]
+persistenceRelational => [/src/Persistence/Relational.java]
+persistenceNoSQL => [/src/Persistence/NoSQL.java]

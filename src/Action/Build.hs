@@ -16,11 +16,15 @@ buildProduct = do
   liftIO $ putStrLn ""
   liftIO $ putStrLn "  building a product"
   liftIO $ putStrLn ""
+
   fm <- fmap fromJust $ gets (view fm)
   ck <- fmap fromJust $ gets (view ck)
   pc <- fmap fromJust $ gets (view pc)
-  assetBase <- fmap fromJust $ gets (view assetBase)
-  prod <- buildM fm ck pc assetBase
+  ab <- fmap fromJust $ gets (view ab)
+
+  prod <- buildM fm ck pc ab
   modify (\env -> env { _prdct = Just prod })
+
+  liftIO $ putStrLn ""
   liftIO $ print $ show prod
   liftIO $ putStrLn ""

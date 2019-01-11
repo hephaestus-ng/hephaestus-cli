@@ -41,7 +41,7 @@ shell = welcome >> shellLoop
         "load pc"          -> load "pc"
         "load src"         -> load "src"
         "load target"      -> load "target"
-        "load asset-base"  -> load "asset-base" -- carregar um asset base usando um arquivo e a funcao parserA.
+        "load ab"          -> load "asset-base" -- carregar um asset base usando um arquivo e a funcao parserA.
                                                 -- retorna um a, que compoe o (SPL fm ck a)
 
         "build"            -> buildProduct

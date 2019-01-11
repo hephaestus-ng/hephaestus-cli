@@ -17,7 +17,8 @@ exportProduct = do
   src  <- fmap fromJust $ gets (view src)
   trg  <- fmap fromJust $ gets (view target)
   prod <- fmap fromJust $ gets (view prdct)
-  exportM src trg prod
+  ab   <- fmap fromJust $ gets (view ab)
+  exportM src trg ab prod
   liftIO $ putStrLn ""
   liftIO $ putStrLn "builded product was exported with success"
   liftIO $ putStrLn ""

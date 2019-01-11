@@ -31,7 +31,7 @@ load "fm" = do
   liftIO $ putStrLn ""
 
 load "ck" = do
-  liftIO $ putStrLn "  "
+  liftIO $ putStrLn ""
   liftIO $ putStrLn "  loading configuration knowledge to hephaestus environment"
   liftIO $ putStrLn "  product.ck path:"
   liftIO $ putStrLn ""
@@ -40,6 +40,18 @@ load "ck" = do
   modify (\env -> env { _ck = Just res})
   liftIO $ putStrLn ""
   liftIO $ putStrLn "  Configuration Knowledge was loaded to environment"
+  liftIO $ putStrLn ""
+
+load "asset-base" = do
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "  loading asset base to hephaestus environment"
+  liftIO $ putStrLn "  asset-base.txt path:"
+  liftIO $ putStrLn ""
+  path <- liftIO $ getLine
+  res <- loadAB path
+  modify (\env -> env { _ab = Just res})
+  liftIO $ putStrLn ""
+  liftIO $ putStrLn "  Asset Base was loaded to environment"
   liftIO $ putStrLn ""
 
 load "pc" = do
@@ -51,7 +63,7 @@ load "pc" = do
       pprint f
       liftIO $ putStrLn ""
       liftIO $ putStrLn "  select the features that will be included in your product, separated by commas. i.e: iris,security,sql,persistence,etc"
-      liftIO $ putStrLn "  "
+      liftIO $ putStrLn ""
       prod <- liftIO $ getLine
       b <- validateP f (splitOn "," prod)
       if b then do
@@ -65,7 +77,7 @@ load "pc" = do
         liftIO $ putStrLn ""
 
 load "src" = do
-  liftIO $ putStrLn "  "
+  liftIO $ putStrLn ""
   liftIO $ putStrLn "  loading input source dir to hephaestus environment"
   liftIO $ putStrLn "  src path:"
   liftIO $ putStrLn ""
@@ -74,7 +86,7 @@ load "src" = do
   liftIO $ putStrLn "src loaded"
 
 load "target" = do
-  liftIO $ putStrLn "  "
+  liftIO $ putStrLn ""
   liftIO $ putStrLn "  loading output dir to hephaestus environment"
   liftIO $ putStrLn "  output path:"
   liftIO $ putStrLn ""
