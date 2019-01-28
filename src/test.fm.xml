@@ -2,18 +2,18 @@
 	<featureModel chosenLayoutAlgorithm="1">
 		<struct>
       <and mandatory="true" name="iris">
-  			<or mandatory="true" name="expressionProblem">
-          <feature mandatory="true" name="sendMessage"/>
-          <feature mandatory="true" name="receiveMessage"/>
+  			<or mandatory="true" name="mail">
+          <feature mandatory="true" name="send"/>
+          <feature mandatory="true" name="receive"/>
   			</or>
-        <feature mandatory="false" name="addressBook"/>
+        <feature mandatory="false" name="contacts"/>
 				<alt name="search">
-					<feature mandatory="true" name="simpleSearch"/>
-					<feature mandatory="true" name="advancedSearch"/>
+					<feature mandatory="true" name="simple"/>
+					<feature mandatory="true" name="advanced"/>
 				</alt>
         <alt mandatory="true" name="persistence">
-          <feature mandatory="true" name="relational"/>
-          <feature mandatory="true" name="nonRelational"/>
+          <feature mandatory="true" name="SQL"/>
+          <feature mandatory="false" name="NoSQL"/>
         </alt>
       </and>
 		</struct>

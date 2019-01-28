@@ -1,5 +1,9 @@
-iris => [define("test"), define("testt")]
-And(iris, search) => [define("tagForIris"), define("tagForSearch")]
-And(search, simpleSearch) => [define("tagForSimpleSearch")]
-search => [select("searchComponent")]
-Not(search) => [remove("searchComponent")]
+iris => [define("iris-base"), select("iris")]
+And(search, And(simple, Not(advanced)) => [select("search"), select("advanced")]
+And(search, And(advanced, Not(simple)) => [select("search"), select("advanced")]
+mail => select("mail")
+send => select("send")
+receive => select("receive")
+persistence => [select("persistence"), select("SQL")]
+And(persistence, NoSQL) => [select("NoSQL")]
+contacts => [select("contacts")]
