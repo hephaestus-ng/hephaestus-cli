@@ -1,9 +1,6 @@
-iris => [define("iris-base"), select("iris")]
-And(search, And(simple, Not(advanced)) => [select("search"), select("advanced")]
-And(search, And(advanced, Not(simple)) => [select("search"), select("advanced")]
-mail => select("mail")
-send => select("send")
-receive => select("receive")
+iris => [define("irisbase"), select("iris")]
+mail => [select("mail"), select("send"), select("receive")]
 persistence => [select("persistence"), select("SQL")]
-And(persistence, NoSQL) => [select("NoSQL")]
+search => [select("search"), select("simple")]
+And(search, advanced) => [select("advanced")]
 contacts => [select("contacts")]

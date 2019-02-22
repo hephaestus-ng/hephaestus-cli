@@ -9,7 +9,7 @@
         <feature mandatory="false" name="contacts"/>
 				<alt name="search">
 					<feature mandatory="true" name="simple"/>
-					<feature mandatory="true" name="advanced"/>
+					<feature mandatory="false" name="advanced"/>
 				</alt>
         <alt mandatory="true" name="persistence">
           <feature mandatory="true" name="SQL"/>
